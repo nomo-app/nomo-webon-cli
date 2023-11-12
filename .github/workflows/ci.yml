@@ -22,16 +22,16 @@ jobs:
     runs-on: ${{ matrix.os }}
     timeout-minutes: 15
     steps:
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v3
         with:
           node-version: 18.x
       - run: git config --global core.autocrlf false
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           token: ${{ secrets.CI_PAT || github.token }}
       - run: git config --global user.email "dev0@nomo.app"
       - run: git config --global user.name "Nomo App (GitHub Action)"
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
@@ -60,7 +60,7 @@ jobs:
 #    runs-on: ${{ matrix.os }}
 #    timeout-minutes: 15
 #    steps:
-#      - uses: actions/setup-node@v1
+#      - uses: actions/setup-node@v3
 #        with:
 #          node-version: ${{ matrix.node }}
 #      - run: node --version
