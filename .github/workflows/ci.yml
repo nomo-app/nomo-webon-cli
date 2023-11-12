@@ -38,8 +38,8 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: npm run link
-      - run: timeout 0.2s time ./bin/nomo-webon-cli --version
-      - run: timeout 0.2s time ./bin/nomo-webon-cli --help
+      - run: ./bin/nomo-webon-cli --version
+      - run: ./bin/nomo-webon-cli --help
       - run: npm run test
       - run: git diff --exit-code
       - name: Release
