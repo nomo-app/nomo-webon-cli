@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "importHelpers": true,
+    "skipLibCheck": true, // without the skipLibCheck option, my compilation was incredibly slow
+    "lib": [
+      "es2019",
+      "dom"
+    ],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noEmitHelpers": true,
+    "outDir": "dist",
+    "pretty": true,
+    "target": "es2019",
+    "strict": true,
+  },
+  "files": [
+    "src/index.ts"
+  ]
+}
