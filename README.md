@@ -19,6 +19,10 @@ nomo-webon-cli build out
 ``
 
 ``
+nomo-webon-cli login
+``
+
+``
 nomo-webon-cli deploy nomo.tar.gz
 ``
 
@@ -44,6 +48,7 @@ Run `nomo-webon-cli --help` to see a list of available commands:
 Options:
   -v, --version     output the version number
 Commands:
+  login             Log into ZENCON account
   build <assetDir>  Build a WebOn archive
   deploy <archive>  Deploy a WebOn archive
 ```
