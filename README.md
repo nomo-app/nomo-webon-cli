@@ -51,4 +51,5 @@ Commands:
   login             Log into ZENCON account
   build <assetDir>  Build a WebOn archive
   deploy <archive>  Deploy a WebOn archive
+  init              Create a new nomo_manifest.json
 ```
