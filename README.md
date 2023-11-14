@@ -59,6 +59,6 @@ Commands:
   setSSH <target>   Set a target for SSH deployments (e.g. "root@<IP-address>:/var/www/html/webons/")
   build <assetDir>  Build a WebOn archive
   deploy <archive>  Deploy a WebOn archive
-  init <assetDir>   Create a nomo_manifest.json or even an AI-icon
+  init <assetDir>   Create a nomo_manifest.json or even an AI-generated icon
   status            Show ZENCON login status or SSH status
 ```
