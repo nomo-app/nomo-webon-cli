@@ -26,6 +26,13 @@ nomo-webon-cli login
 nomo-webon-cli deploy nomo.tar.gz
 ``
 
+## Deployment Targets
+
+`nomo-webon-cli` offers the following options for deployment:
+
+- **Raw SSH deployments**: Deploy via SSH to an arbitrary location
+- **ZENCON deployments**: Deploy to ZENCON-managed infrastructure
+
 ## Installation
 
 Add `nomo-webon-cli` to your dev-dependencies:
@@ -48,8 +55,10 @@ Run `nomo-webon-cli --help` to see a list of available commands:
 Options:
   -v, --version     output the version number
 Commands:
-  login             Log into ZENCON account
+  login             Log into a ZENCON account
+  setSSH <target>   Set a target for SSH deployments (e.g. "root@<IP-address>:/var/www/html/webons/")
   build <assetDir>  Build a WebOn archive
   deploy <archive>  Deploy a WebOn archive
   init <assetDir>   Create a nomo_manifest.json or even an AI-icon
+  status            Show ZENCON login status or SSH status
 ```
