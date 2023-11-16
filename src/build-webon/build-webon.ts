@@ -6,20 +6,21 @@ import tar from "tar";
 export async function buildWebOn(args: { assetDir: string }) {
   checkDir(args.assetDir);
 
-  // Rename "assetDir" to "out" if it's not already named "out"
+  // Check if the assetDir path ends with '/out'
+  const isOutDir = args.assetDir.endsWith("/out");
   const outDir = resolve(args.assetDir);
+  const outDirPath = resolve(args.assetDir, "..", "out");
+  console.log("outDir: " + outDir.toString());
 
-  console.log("HIER outDir: " + outDir.toString());
+  if (!isOutDir) {
+    console.log("outDirPath: " + outDirPath.toString());
 
-  const outDirPath = resolve(args.assetDir);
-  console.log("HIER outDirPath: " + outDirPath.toString());
-
-  if (outDir !== outDirPath) {
-    console.log("Renaming asset directory to 'out'...");
     try {
+      // Rename the assetDir to include '/out'
       renameSync(args.assetDir, outDirPath);
+      console.log("Renaming asset directory to 'out'...");
     } catch (error) {
-      console.error(`Error renaming directory: `);
+      console.error(`Error renaming directory: ${error}`);
       return;
     }
   } else {
@@ -31,13 +32,22 @@ export async function buildWebOn(args: { assetDir: string }) {
     console.log("Creating 'out' directory...");
     mkdirSync(outDir);
   }
-
   // Check if the "out" directory contains required files
-  const requiredFiles = ["index.html", "nomo_icon.svg", "nomo_manifest.json"].map((file) => {return join(outDir, file);});
-  const missingFiles = requiredFiles.filter(file => !existsSync(file));
+  const requiredFiles = [
+    "index.html",
+    "nomo_icon.svg",
+    "nomo_manifest.json",
+  ].map((file) => {
+    return join(outDirPath, file);
+  });
+  const missingFiles = requiredFiles.filter((file) => !existsSync(file));
 
   if (missingFiles.length > 0) {
-    console.error(`Error: The 'out' directory is missing the following required files: ${missingFiles.join(', ')}`);
+    console.error(
+      `Error: The 'out' directory is missing the following required files: ${missingFiles.join(
+        ", "
+      )}`
+    );
     return; // or handle the error as needed
   }
 
