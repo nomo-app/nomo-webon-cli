@@ -26,6 +26,9 @@ nomo-webon-cli login
 nomo-webon-cli deploy nomo.tar.gz
 ``
 
+The `out` folder needs to contain files like `nomo_manifest.json` and `nomo_icon.svg`.
+Use `nomo-webon-cli init` if you do not yet have a `nomo_manifest.json`.
+
 ## Deployment Targets
 
 `nomo-webon-cli` offers the following options for deployment:
