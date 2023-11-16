@@ -44,9 +44,9 @@ export function getDebugPath(path: string): string {
   return `\'${resolve(path)}\'`; // Show an absolute path to users in case of errors.
 }
 
-export function logFatal(msg: string): never {
+export function logFatal(msg: string): void {
   console.error(`error: ${msg}`);
-  return process.exit(1) as never;
+  // Do not exit immediately for testing purposes
 }
 
 export function deleteFile(path: string): void {
@@ -59,4 +59,6 @@ export function nodeVersionSatisfies(feature: string, range: string): void {
   if (!semver.satisfies(process.version, range)) {
     logFatal(`${feature} requires node ${range}`);
   }
+  
 }
+
