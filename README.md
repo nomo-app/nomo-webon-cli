@@ -15,15 +15,13 @@ First, you need static web-assets made with some other build-system or framework
 Assuming that your web-assets are in a folder `out`, you can build and deploy a WebOn like so:
 
 ``
+nomo-webon-cli init
 nomo-webon-cli build out
 ``
 
 ``
-nomo-webon-cli login
-``
-
-``
-nomo-webon-cli deploy nomo.tar.gz
+nomo-webon-cli deploy staging nomo.tar.gz
+nomo-webon-cli deploy production nomo.tar.gz
 ``
 
 The `out` folder needs to contain files like `nomo_manifest.json` and `nomo_icon.svg`.
@@ -50,6 +48,24 @@ Alternatively, you can run it via npx:
 npx nomo-webon-cli --help
 ``
 
+## Config
+
+The `nomo-webon-cli` is configured with a file `nomo_cli_config.json`.
+See the following example:
+
+```
+{
+  "deployTargets": {
+    "production": {
+      "sshTarget": "root@<IP-address>:/var/www/html/webons/"
+    },
+    "staging": {
+      "sshTarget": "root@staging.nomo.app:/var/www/html/webons/"
+    }
+  }
+}
+```
+
 ## Usage Options
 
 Run `nomo-webon-cli --help` to see a list of available commands:
@@ -58,10 +74,8 @@ Run `nomo-webon-cli --help` to see a list of available commands:
 Options:
   -v, --version     output the version number
 Commands:
-  login             Log into a ZENCON account
-  setSSH <target>   Set a target for SSH deployments (e.g. "root@<IP-address>:/var/www/html/webons/")
-  build <assetDir>  Build a WebOn archive
-  deploy <archive>  Deploy a WebOn archive
-  init <assetDir>   Create a nomo_manifest.json or even an AI-generated icon
-  status            Show ZENCON login status or SSH status
+  login                            Log into a ZENCON account
+  build <assetDir>                 Build a WebOn archive
+  deploy <deployTarget> <archive>  Deploy a WebOn archive
+  init <assetDir>                  Create a nomo_manifest.json and a nomo_cli_config.json
 ```
