@@ -3,6 +3,7 @@ import "dotenv/config";
 import { extractVersion } from "./util/extract-version";
 import { buildWebOn } from "./build-webon/build-webon";
 import { deployWebOn } from "./deploy-webon/deploy-webon";
+import { init } from "./init/init";
 
 process.on("unhandledRejection", (error) => {
   console.error("[fatal]", error);
@@ -15,6 +16,17 @@ function commanderBuildWebOn() {
     .action((assetDir) => {
       runAsyncCommand(async () => {
         await buildWebOn({ assetDir });
+      });
+    });
+}
+
+function commanderInitWebOn() {
+  commander
+    .command("init <assetDir>")
+    .description("Init nomo-webon-cli, create configs and manifest if not existing.")
+    .action((assetDir) => {
+      runAsyncCommand(async () => {
+        await init({ assetDir });
       });
     });
 }
@@ -48,6 +60,7 @@ export function run(process: NodeJS.Process, cliBinDir: string): void {
   commander.addHelpCommand(false);
   commanderBuildWebOn();
   commanderDeployWebOn();
+  commanderInitWebOn();
   commander
     .version(extractVersion({ cliBinDir }), "-v, --version")
     .parse(process.argv);
