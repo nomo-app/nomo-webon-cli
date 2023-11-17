@@ -14,15 +14,13 @@ See https://github.com/nomo-app/nomo-webon-kit for general docs about WebOns.
 First, you need static web-assets made with some other build-system or framework.
 Assuming that your web-assets are in a folder `out`, you can build and deploy a WebOn like so:
 
-``
-nomo-webon-cli init
-nomo-webon-cli build out
-``
 
-``
-nomo-webon-cli deploy staging nomo.tar.gz
-nomo-webon-cli deploy production nomo.tar.gz
-``
+```
+nomo-webon-cli build out
+
+nomo-webon-cli deploy staging nomo.tar.gz  
+nomo-webon-cli deploy production nomo.tar.gz  
+```
 
 The `out` folder needs to contain files like `nomo_manifest.json` and `nomo_icon.svg`.
 Use `nomo-webon-cli init` if you do not yet have a `nomo_manifest.json`.
