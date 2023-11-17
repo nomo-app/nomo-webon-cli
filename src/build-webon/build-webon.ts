@@ -46,9 +46,9 @@ export async function buildWebOn(args: { assetDir: string }) {
     console.error(
       `Error: The 'out' directory is missing the following required files: ${missingFiles.join(
         ", "
-      )}`
+      )} Use nomo-webon-cli init if you do not have a nomo_manifest.json yet.`
     );
-    return; // or handle the error as needed
+    return;
   }
 
   // Create a tar.gz file
