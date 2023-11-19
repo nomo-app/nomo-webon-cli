@@ -63,7 +63,7 @@ const nomoCliConfig = {
         sshBaseDir: "/var/www/production_webons/",
 
         /**
-         * publicBaseUrl is an URL where sshBaseDir gets exposed to the Internet.
+         * publicBaseUrl is a URL where sshBaseDir gets exposed to the Internet.
          * publicBaseUrl is needed to generate a deeplink for installing your WebOn.
          * For example, you could configure an nginx-server to map sshBaseDir to a publicBaseUrl.
          */
