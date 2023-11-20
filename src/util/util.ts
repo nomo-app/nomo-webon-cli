@@ -6,6 +6,8 @@ import {
 import { join, resolve } from "path";
 import semver from "semver";
 
+let _isUnitTest:boolean = false;
+
 export function joinDirWithFileName(dir: string, fileName: string): string {
   checkDir(dir);
   return join(resolve(dir), fileName);
@@ -45,7 +47,16 @@ export function getDebugPath(path: string): string {
 }
 
 export function logFatal(msg: string): void {
-  console.error(`error: ${msg}`);
+  if(isUnitTest()) {
+    throw new Error(`error: ${msg}`);
+  }
+  else {
+      console.error(`error: ${msg}`);
+       process.exit(1);
+  }
+
+  
+  
   // Do not exit immediately for testing purposes
 }
 
@@ -62,3 +73,10 @@ export function nodeVersionSatisfies(feature: string, range: string): void {
   
 }
 
+export function isUnitTest() {
+    return _isUnitTest;
+}
+
+export function enableUnitTest(): void {
+   _isUnitTest = true;
+}

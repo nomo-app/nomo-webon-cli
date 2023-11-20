@@ -1,7 +1,7 @@
 import {
   runCliTest,
   runCliTestExpectFailure
-} from "../test-util/test-util";
+} from "../../test-util/test-util";
 
 test("--help", async () => {
   const output = await runCliTest(`--help`, {

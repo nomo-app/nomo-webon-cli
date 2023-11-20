@@ -1,9 +1,8 @@
-import { runCliTest } from "../test-util/test-util";
-
+import { runCliTest } from "../../test-util/test-util";
 
 test("--version", async () => {
   const output = await runCliTest(`--version`, {
-    pwd: "/"
+    pwd: "/",
   });
   expect(output).toContain("0.");
 });
