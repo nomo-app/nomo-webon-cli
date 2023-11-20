@@ -1,6 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import { NomoManifest, NomoCliConfig, GeneratedFile } from "./interface";
+import { isValidWebOnId } from "../util/validate-manifest";
 
 async function getUserInput(prompt: string): Promise<string> {
   const inquirer = require("inquirer");
@@ -41,7 +42,9 @@ function generateNomoCliConfigContent(webonId: string): NomoCliConfig {
       },
       staging: {
         rawSSH: {
-          sshHost: process.env.SSH_TARGET || "Set your env SSH_TARGET like: export SSH_TARGET= <value> ",
+          sshHost:
+            process.env.SSH_TARGET ||
+            "Set your env SSH_TARGET like: export SSH_TARGET= <value> ",
           sshBaseDir: `/var/www/html/webons/${webonId}/`,
           publicBaseUrl: `https://staging.nomo.app/${webonId}`,
           sshPort: 51110,
@@ -66,7 +69,8 @@ export async function init(args: { assetDir: string }): Promise<void> {
     console.log("nomo_manifest.json already exists.");
   } else {
     const webonName = await getUserInput("Enter webon_name: ");
-    const webonId = await getUserInput("Enter webon_id: ");
+    const webonId = await getValidWebOnId("Enter unique webon_id: ");
+
     const nomoManifest = await generateNomoManifestContent(webonId, webonName);
 
     writeFile({
@@ -98,4 +102,15 @@ module.exports = {
 };`,
     });
   }
+}
+
+async function getValidWebOnId(prompt: string): Promise<string> {
+  let webonId = await getUserInput(prompt);
+  while (!isValidWebOnId(webonId)) {
+    console.error(`Invalid webon_id: ${webonId}`);
+    webonId = await getUserInput(
+      "Enter an unique valid webon_id like demo.web.app for example:"
+    );
+  }
+  return webonId;
 }
