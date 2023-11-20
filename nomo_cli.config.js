@@ -14,9 +14,8 @@ const nomoCliConfig = {
 
         /**
          * sshBaseDir is a remote-directory for deploying your WebOn.
-         * Within sshBaseDir, nomo-webon-cli will create a subdirectory for each WebOn.
          */
-        sshBaseDir: "/var/www/production_webons/",
+        sshBaseDir: "/var/www/production_webons/${webon_id}/",
 
         /**
          * publicBaseUrl is a URL where sshBaseDir gets exposed to the Internet.
@@ -32,15 +31,9 @@ const nomoCliConfig = {
          * sshHost could be taken from an environment-variable to hide your target IP address.
          */
         sshHost: process.env.SSH_TARGET,
-        sshBaseDir: "/var/www/html/webons/",
+        sshBaseDir: "/var/www/html/webons/${webon_id}/nomo.tar.gz",
         publicBaseUrl: "https://staging.nomo.app",
 
-        /**
-         * Optional: You can specify a subDir for hiding WebOns from the public.
-         * By default, nomo-webon-cli will create a subDir based on your WebOn-ID.
-         * However, if you set subDir to a secret value, then you could deploy WebOns to a secret location.
-         */
-        subDir: "secret-subdir-867fa972-e88e-49bb-85fa",
 
         /**
          * Optional. The default sshPort is 22.
