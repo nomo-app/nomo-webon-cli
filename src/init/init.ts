@@ -41,7 +41,7 @@ function generateNomoCliConfigContent(webonId: string): NomoCliConfig {
       },
       staging: {
         rawSSH: {
-          sshHost: process.env.SSH_TARGET || "",
+          sshHost: process.env.SSH_TARGET || "Set your env SSH_TARGET like: export SSH_TARGET= <value> ",
           sshBaseDir: `/var/www/html/webons/${webonId}/`,
           publicBaseUrl: `https://staging.nomo.app/${webonId}`,
           sshPort: 51110,
