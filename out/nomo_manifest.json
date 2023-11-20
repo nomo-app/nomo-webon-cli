@@ -1,8 +1,7 @@
 {
   "nomo_manifest_version": "1.1.0",
   "webon_id": "demo.nomo.app",
-  "webon_name": "DEMO APP",
+  "webon_name": "Demo App",
   "webon_version": "0.1.0",
-  "min_nomo_version": "0.3.1",
   "permissions": []
 }

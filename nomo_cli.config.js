@@ -3,23 +3,23 @@
  */
 
 const nomoCliConfig = {
-  deployTargets: {
-    production: {
-      rawSSH: {
-        sshHost: "root@<IP-address>",
-        sshBaseDir: "/var/www/production_webons/${webon_id}/",
-        publicBaseUrl: "https://w.nomo.app/${webon_id}",
-      },
+  "deployTargets": {
+    "production": {
+      "rawSSH": {
+        "sshHost": "root@<IP-address>",
+        "sshBaseDir": "/var/www/production_webons/demo.nomo.app/",
+        "publicBaseUrl": "https://w.nomo.app/demo.nomo.app"
+      }
     },
-    staging: {
-      rawSSH: {
-        sshHost: process.env.SSH_TARGET,
-        sshBaseDir: "/var/www/html/webons/${webon_id}/",
-        publicBaseUrl: "https://staging.nomo.app/${webon_id}",
-        sshPort: 51110,
-      },
-    },
-  },
+    "staging": {
+      "rawSSH": {
+        "sshHost": "some_value",
+        "sshBaseDir": "/var/www/html/webons/demo.nomo.app/",
+        "publicBaseUrl": "https://staging.nomo.app/demo.nomo.app",
+        "sshPort": 51110
+      }
+    }
+  }
 };
 
 module.exports = {
