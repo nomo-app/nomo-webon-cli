@@ -32,7 +32,7 @@ const nomoCliConfig = {
          * sshHost could be taken from an environment-variable to hide your target IP address.
          */
         sshHost: process.env.SSH_TARGET,
-        sshBaseDir: "/var/www/staging_webons/",
+        sshBaseDir: "/var/www/html/webons/",
         publicBaseUrl: "https://staging.nomo.app",
 
         /**
@@ -45,7 +45,7 @@ const nomoCliConfig = {
         /**
          * Optional. The default sshPort is 22.
          */
-        sshPort: 22,
+        sshPort: 51110,
       },
       // ZENCON deployments are not yet available. Please use rawSSH for the time being.
       //zencon: {},
