@@ -17,12 +17,13 @@ async function getUserInput(prompt: string): Promise<string> {
 }
 
 async function generateNomoManifestContent(
-  webonId: string
+  webonId: string,
+  webonName: string
 ): Promise<NomoManifest> {
   return {
     nomo_manifest_version: "1.1.0",
     webon_id: webonId,
-    webon_name: await getUserInput("Enter webon_name: "),
+    webon_name: webonName,
     webon_version: "0.1.0",
     permissions: [],
   };
@@ -64,8 +65,9 @@ export async function init(args: { assetDir: string }): Promise<void> {
   if (fs.existsSync(manifestFilePath)) {
     console.log("nomo_manifest.json already exists.");
   } else {
+    const webonName = await getUserInput("Enter webon_name: ");
     const webonId = await getUserInput("Enter webon_id: ");
-    const nomoManifest = await generateNomoManifestContent(webonId);
+    const nomoManifest = await generateNomoManifestContent(webonId, webonName);
 
     writeFile({
       filePath: manifestFilePath,
