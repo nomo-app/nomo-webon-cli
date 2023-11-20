@@ -66,7 +66,7 @@ const nomoCliConfig = {
          * publicBaseUrl is needed to generate a deeplink for installing your WebOn.
          * For example, you could configure an nginx-server to map sshBaseDir to a publicBaseUrl.
          */
-        publicBaseUrl: "https://w.nomo.app",
+        publicBaseUrl: "https://w.nomo.app/${webon_id}",
       },
     },
     staging: {
@@ -76,7 +76,7 @@ const nomoCliConfig = {
          */
         sshHost: process.env.SSH_TARGET,
         sshBaseDir: "/var/www/staging_webons/${webon_id}",
-        publicBaseUrl: "https://staging.nomo.app",
+        publicBaseUrl: "https://staging.nomo.app/${webon_id}",
 
         /**
          * Optional. The default sshPort is 22.
