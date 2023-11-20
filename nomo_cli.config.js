@@ -31,9 +31,8 @@ const nomoCliConfig = {
          * sshHost could be taken from an environment-variable to hide your target IP address.
          */
         sshHost: process.env.SSH_TARGET,
-        sshBaseDir: "/var/www/html/webons/${webon_id}/nomo.tar.gz",
+        sshBaseDir: "/var/www/html/webons/${webon_id}/",
         publicBaseUrl: "https://staging.nomo.app",
-
 
         /**
          * Optional. The default sshPort is 22.
