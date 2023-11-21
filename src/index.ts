@@ -23,7 +23,9 @@ function commanderBuildWebOn() {
 function commanderInitWebOn() {
   commander
     .command("init <assetDir>")
-    .description("Init nomo-webon-cli, create configs and manifest if not existing.")
+    .description(
+      "Init nomo-webon-cli, create configs and manifest if not existing."
+    )
     .action((assetDir) => {
       runAsyncCommand(async () => {
         await init({ assetDir });
@@ -33,11 +35,11 @@ function commanderInitWebOn() {
 
 function commanderDeployWebOn() {
   commander
-    .command("deploy <archive>")
+    .command("deploy <archive> <deployTarget>")
     .description("Deploy a WebOn archive")
-    .action((archive) => {
+    .action((archive, deployTarget) => {
       runAsyncCommand(async () => {
-        await deployWebOn({ archive });
+        await deployWebOn({ archive, deployTarget });
       });
     });
 }
