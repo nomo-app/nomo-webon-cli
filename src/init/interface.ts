@@ -59,3 +59,18 @@ export interface GeneratedFile {
   filePath: string;
   content: string;
 }
+
+export interface RawSSHConfig {
+  sshHost: string;
+  sshBaseDir: string;
+  publicBaseUrl: string;
+  sshPort?: number; // Make the sshPort optional
+}
+
+export interface DeployTargetConfig {
+  rawSSH: RawSSHConfig;
+}
+
+export interface NomoCliConfigs {
+  deployTargets: Record<string, DeployTargetConfig>;
+}

@@ -97,9 +97,7 @@ export async function init(args: { assetDir: string }): Promise<void> {
 
 const nomoCliConfig = ${JSON.stringify(nomoCliConfig, null, 2)};
 
-module.exports = {
-  nomoCliConfig,
-};`,
+module.exports = nomoCliConfig;`,
     });
   }
 }
@@ -109,7 +107,7 @@ async function getValidWebOnId(prompt: string): Promise<string> {
   while (!isValidWebOnId(webonId)) {
     console.error(`Invalid webon_id: ${webonId}`);
     webonId = await getUserInput(
-      "Enter an unique valid webon_id like demo.web.app for example:"
+      "Enter an unique valid webon_id like demo.web.app:"
     );
   }
   return webonId;
