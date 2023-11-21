@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "isolatedModules": true, // This option disables type-checking for files that are not explicitly specified on the command line.
     "esModuleInterop": true,
     "importHelpers": true,
     "skipLibCheck": true, // without the skipLibCheck option, my compilation was incredibly slow

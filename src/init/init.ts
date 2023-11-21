@@ -97,9 +97,7 @@ export async function init(args: { assetDir: string }): Promise<void> {
 
 const nomoCliConfig = ${JSON.stringify(nomoCliConfig, null, 2)};
 
-module.exports = {
-  nomoCliConfig,
-};`,
+module.exports = nomoCliConfig;`,
     });
   }
 }
