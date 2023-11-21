@@ -21,3 +21,12 @@ typings/
 
 # JetBrains
 .idea/
+
+# Cli configs
+nomo_cli.config.js
+
+# Manifest
+out/nomo_manifest.json
+
+# Webon Files
+out/nomo.tar.gz

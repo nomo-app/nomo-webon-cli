@@ -1,4 +1,10 @@
-import { checkNotDir, logFatal } from "../util/util";
+import {
+  checkNotDir,
+  logFatal,
+  checkIfTarGz,
+  readCliConfig,
+} from "../util/util";
+import { connectToSSH } from "../util/ssh-manager";
 import { NomoManifest, NomoCliConfigs, GeneratedFile } from "../init/interface";
 import { resolve } from "path";
 
@@ -8,6 +14,7 @@ export async function deployWebOn(args: {
 }) {
   const { deployTarget, archive } = args;
   checkNotDir(archive);
+  checkIfTarGz(archive);
 
   const nomoCliConfig = readCliConfig();
 
@@ -17,6 +24,12 @@ export async function deployWebOn(args: {
   }
 
   const { rawSSH } = targetConfig;
+
+  try {
+    await connectToSSH({ deployTarget, archive });
+  } catch (e) {
+    logFatal("Failed to connect to SSH");
+  }
 
   if ("sshPort" in rawSSH) {
     const { sshHost, sshBaseDir, publicBaseUrl, sshPort } = rawSSH;
@@ -34,17 +47,5 @@ export async function deployWebOn(args: {
     console.log(`Public Base URL: ${publicBaseUrl}`);
     console.log("SSH Port is not specified");
     console.log(`Archive Path: ${archive}`);
-  }
-}
-
-function readCliConfig(): NomoCliConfigs {
-  const cliPath = resolve("./nomo_cli.config.js");
-  try {
-    // @ts-ignore
-    const nomoCliConfig = require(cliPath);
-    console.log(nomoCliConfig);
-    return nomoCliConfig;
-  } catch (e) {
-    logFatal("Could not find cli_config " + cliPath);
   }
 }

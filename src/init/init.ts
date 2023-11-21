@@ -107,7 +107,7 @@ async function getValidWebOnId(prompt: string): Promise<string> {
   while (!isValidWebOnId(webonId)) {
     console.error(`Invalid webon_id: ${webonId}`);
     webonId = await getUserInput(
-      "Enter an unique valid webon_id like demo.web.app for example:"
+      "Enter an unique valid webon_id like demo.web.app:"
     );
   }
   return webonId;
