@@ -12,7 +12,7 @@ See https://github.com/nomo-app/nomo-webon-kit for general docs about WebOns.
 
 At its core, `nomo-webon-cli` enables to deploy frontends in a way such that multiple versions can co-exist at the same time (e.g. production-frontends, staging-frontends and so on).
 
-As such, `nomo-webon-cli` follows a similar philophy like https://www.netlify.com and the [Jamstack](https://jamstack.org/).
+As such, `nomo-webon-cli` follows a similar philosophy like https://www.netlify.com and the [Jamstack](https://jamstack.org/).
 
 However, `nomo-webon-cli` adds a few unique features that are not available in other solutions:
 
