@@ -1,4 +1,5 @@
 import { logFatal, readCliConfig, runCommandsSequentially } from "../util/util";
+import { extractAndCache } from "../util/extract-tar-gz";
 
 let sshConnect = "";
 
@@ -21,6 +22,9 @@ export async function connectToSSH(args: {
   const portOption = sshPort ? `-p ${sshPort}` : "";
   sshConnect = `ssh -t ${sshHost} ${portOption}`;
 
+  await extractAndCache({
+    tarFilePath: archive,
+  });
   const commands = [ls(), checkCreateDir(sshBaseDir)];
 
   await runCommandsSequentially(commands);
