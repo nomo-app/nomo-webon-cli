@@ -8,6 +8,18 @@ Please refer to the advanced docs in https://github.com/nomo-app/nomo-webon-kit/
 `nomo-webon-cli` is a command line tool for building and deploying WebOns.
 See https://github.com/nomo-app/nomo-webon-kit for general docs about WebOns.
 
+## Why Nomo WebOn CLI?
+
+At its core, `nomo-webon-cli` enables to deploy frontends in a way such that multiple versions can co-exist at the same time (e.g. production-frontends, staging-frontends and so on).
+
+As such, `nomo-webon-cli` follows a similar philophy like https://www.netlify.com and the [Jamstack](https://jamstack.org/).
+
+However, `nomo-webon-cli` adds a few unique features that are not available in other solutions:
+
+- **Fully decentralized:** Everyone can setup their own server and deploy WebOns via SSH
+- **Nomo Update Notifications:** The Nomo App will show notifications when a WebOn has been updated.
+- **Fully customizable:** With only a few lines of JS-config, you can setup an arbitrary number of staging-tracks / testing-tracks or whatever is needed for your WebOn.
+
 ## How to use
 
 First, you need static web-assets made with some other build-system or framework.
