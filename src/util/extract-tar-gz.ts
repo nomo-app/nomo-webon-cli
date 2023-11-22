@@ -5,6 +5,7 @@ import { existsSync, mkdirSync } from "fs";
 
 const requiredFiles = ["index.html", "nomo_icon.svg", "nomo_manifest.json"];
 const cacheDirectory = "./cache";
+const cacheOutDirectory = "./cache/out";
 
 export async function extractAndCache(args: {
   tarFilePath: string;
@@ -36,7 +37,6 @@ export async function extractAndCache(args: {
 
     const missingFiles = requiredFiles.filter((file) => {
       const filePath = join(resolve(destinationDir), "/out/", file);
-      console.log(filePath);
       return !existsSync(filePath);
     });
     if (missingFiles.length > 0) {
@@ -50,4 +50,28 @@ export async function extractAndCache(args: {
   } catch (error) {
     logFatal(`Error extracting tar.gz file: ${error}`);
   }
+}
+
+export function getCachedIndexHtmlPath(): string {
+  const path = join(resolve(cacheOutDirectory), "index.html");
+  if (!existsSync(path)) {
+    logFatal(`Error: ${path} is missing.`);
+  }
+  return path;
+}
+
+export function getCachedNomoIconPath(): string {
+  const path = join(resolve(cacheOutDirectory), "nomo_icon.svg");
+  if (!existsSync(path)) {
+    logFatal(`Error: ${path} is missing.`);
+  }
+  return path;
+}
+
+export function getCachedNomoManifestPath(): string {
+  const path = join(resolve(cacheOutDirectory), "nomo_manifest.json");
+  if (!existsSync(path)) {
+    logFatal(`Error: ${path} is missing.`);
+  }
+  return path;
 }
