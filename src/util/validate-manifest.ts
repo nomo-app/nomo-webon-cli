@@ -1,18 +1,17 @@
 import { NomoManifest } from "../init/interface";
+import { logFatal } from "../util/util";
 
 class WebOnError extends Error {
   constructor(message: string) {
     super(message);
     this.name = "WebOnError";
+    logFatal(this.message);
   }
 }
 
-async function validateManifest(
-  manifest: NomoManifest,
-  webonUrl: string,
-  { devMode }: { devMode: boolean }
-): Promise<void> {
+export async function validateManifest(manifest: NomoManifest): Promise<void> {
   const webonVersion = manifest.webon_version;
+
   if (!_isValidSemanticVersion(webonVersion)) {
     throw new WebOnError(
       `webon_version ${webonVersion} does not comply with semantic versioning regexp`
@@ -36,22 +35,30 @@ async function validateManifest(
   }
 
   const minNomoVersion = manifest.min_nomo_version;
-  if (minNomoVersion != null) {
-    if (!_isValidSemanticVersion(minNomoVersion)) {
-      throw new WebOnError(
-        `min_nomo_version ${minNomoVersion} does not comply with semantic versioning regexp`
-      );
-    }
-    // Assume you have a function similar to versionTwoGreaterThanVersionOne
-    const currentVersion = "1.2.0"; // You need to replace this with the actual version
-    if (versionTwoGreaterThanVersionOne(currentVersion, minNomoVersion)) {
-      throw new WebOnError(
-        `Nomo App outdated! This WebOn requires ${minNomoVersion}, but the current version is ${currentVersion}`
-      );
-    }
+  const webOnVersion = manifest.webon_version;
+
+  //if (minNomoVersion != null) {
+  // if (!_isValidSemanticVersion(minNomoVersion)) {
+  //  throw new WebOnError(
+  //    `min_nomo_version ${minNomoVersion} does not comply with semantic versioning regexp`
+  //  );
+  // }
+  // Assume you have a function similar to versionTwoGreaterThanVersionOne
+  const currentVersion = "0.1.0";
+  // TODO: set the currentVersion to manifest.webon_version and compare it to the manifest version from server
+  console.log("currentVersion: " + currentVersion);
+  console.log("webOnversion" + webOnVersion);
+  if (versionTwoGreaterThanVersionOne(currentVersion, webOnVersion)) {
+    throw new WebOnError(
+      `Your WebOn is outdated! This WebOn requires ${webOnVersion}, but the current version is ${currentVersion}`
+    );
+  } else if (currentVersion === webOnVersion) {
+    throw new WebOnError(
+      `Your webOn version is equal to the version your already uploaded: ${webOnVersion}, please update your webOn_version in nomo_manifest.json.`
+    );
   }
 }
-
+//}
 
 function _isValidSemanticVersion(version: string): boolean {
   const pattern = /^(\d+)\.(\d+)\.(\d+)$/;
@@ -59,17 +66,29 @@ function _isValidSemanticVersion(version: string): boolean {
   return regex.test(version);
 }
 
-// Assuming versionTwoGreaterThanVersionOne is a function you have implemented
 function versionTwoGreaterThanVersionOne(
   versionTwo: string,
   versionOne: string
 ): boolean {
-  // Implement the comparison logic here
+  const v1Components = versionOne.split(".");
+  const v2Components = versionTwo.split(".");
+
+  for (let i = 0; i < Math.max(v1Components.length, v2Components.length); i++) {
+    const v1 = parseInt(v1Components[i] || "0", 10);
+    const v2 = parseInt(v2Components[i] || "0", 10);
+
+    if (v1 > v2) {
+      return false;
+    } else if (v1 < v2) {
+      return true;
+    }
+  }
+
   return false;
 }
 
 export function isValidWebOnId(webon_id: string): boolean {
-    const webonIdRegExp =
-      /^(?:[a-zA-Z0-9_-]+\.)*[a-zA-Z0-9_-]+(?:\.[a-zA-Z0-9_-]+)+$/;
-    return webonIdRegExp.test(webon_id);
-  } 
+  const webonIdRegExp =
+    /^(?:[a-zA-Z0-9_-]+\.)*[a-zA-Z0-9_-]+(?:\.[a-zA-Z0-9_-]+)+$/;
+  return webonIdRegExp.test(webon_id);
+}
