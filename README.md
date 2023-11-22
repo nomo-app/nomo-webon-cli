@@ -101,9 +101,7 @@ const nomoCliConfig = {
   },
 };
 
-module.exports = {
-  nomoCliConfig,
-};
+module.exports = nomoCliConfig;
 ```
 
 ## Usage Options
