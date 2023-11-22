@@ -1,7 +1,7 @@
 import { logFatal } from "../util/util";
 import * as tar from "tar";
 import { resolve, join } from "path";
-import { existsSync } from "fs";
+import { existsSync, mkdirSync } from "fs";
 
 const requiredFiles = ["index.html", "nomo_icon.svg", "nomo_manifest.json"];
 const cacheDirectory = "./cache";
@@ -11,6 +11,11 @@ export async function extractAndCache(args: {
   destinationDir?: string;
 }) {
   const { tarFilePath, destinationDir = cacheDirectory } = args;
+
+  if (!existsSync(destinationDir)) {
+    console.log(`Creating cache directory: ${destinationDir}`);
+    mkdirSync(destinationDir);
+  }
 
   try {
     await tar.x({
