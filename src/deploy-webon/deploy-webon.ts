@@ -4,9 +4,7 @@ import {
   checkIfTarGz,
   readCliConfig,
 } from "../util/util";
-import { connectToSSH } from "../util/ssh-manager";
-import { NomoManifest, NomoCliConfigs, GeneratedFile } from "../init/interface";
-import { resolve } from "path";
+import { connectToSSH } from "../services/ssh-manager";
 
 export async function deployWebOn(args: {
   deployTarget: string;
