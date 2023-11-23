@@ -37,14 +37,17 @@ export async function connectAndDeploy(args: {
     tarFilePath: archive,
   });
 
-  manifestChecks(manifestPath);
+  const serverWebOnVersion = sshOperations.getWebonVersionIfExists(sshBaseDir);
+  console.log(serverWebOnVersion);
+  manifestChecks(manifestPath, serverWebOnVersion);
 
   const commands = [
+    sshOperations.getWebonVersionIfExists(sshBaseDir),
     sshOperations.ls(),
     sshOperations.checkCreateDir(sshBaseDir),
-    sshOperations.deployFile(archive, sshHost, sshBaseDir),
     sshOperations.deployManifest(manifestPath, sshHost, sshBaseDir),
     sshOperations.deployFile(iconPath, sshHost, sshBaseDir),
+    sshOperations.deployFile(archive, sshHost, sshBaseDir),
   ];
 
   await runCommandsSequentially(commands);

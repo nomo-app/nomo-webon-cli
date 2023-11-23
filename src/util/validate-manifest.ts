@@ -9,7 +9,10 @@ class WebOnError extends Error {
   }
 }
 
-export async function validateManifest(manifest: NomoManifest): Promise<void> {
+export async function validateManifest(
+  manifest: NomoManifest,
+  serverWebOnVersion: string
+): Promise<void> {
   const webonVersion = manifest.webon_version;
 
   if (!_isValidSemanticVersion(webonVersion)) {
@@ -44,17 +47,18 @@ export async function validateManifest(manifest: NomoManifest): Promise<void> {
   //  );
   // }
 
-  const currentVersion = "0.0.0";
+  const currentVersion = manifest.webon_version;
+
   // TODO: set the currentVersion to manifest.webon_version and compare it to the manifest version from server
   console.log("currentVersion: " + currentVersion);
-  console.log("webOnversion" + webOnVersion);
-  if (versionTwoGreaterThanVersionOne(currentVersion, webOnVersion)) {
+  console.log("webOnversion" + serverWebOnVersion);
+  if (versionTwoGreaterThanVersionOne(currentVersion, serverWebOnVersion)) {
     throw new WebOnError(
-      `Your WebOn is outdated! This WebOn requires ${webOnVersion}, but the current version is ${currentVersion}`
+      `Your WebOn is outdated! This WebOn requires ${serverWebOnVersion}, but the current version is ${currentVersion}`
     );
-  } else if (currentVersion === webOnVersion) {
+  } else if (currentVersion === serverWebOnVersion) {
     throw new WebOnError(
-      `Your webOn version is equal to the version your already uploaded: ${webOnVersion}, please update your webOn_version in nomo_manifest.json.`
+      `Your webOn version is equal to the version your already uploaded: ${serverWebOnVersion}, please update your webOn_version in nomo_manifest.json.`
     );
   }
 }

@@ -63,8 +63,19 @@ export class SSHOperations {
   public executeCommand(command: string): string {
     return command;
   }
-}
 
+  public getWebonVersionIfExists(sshBaseDir: string): string {
+    const checkManifestCommand = `${this.sshConnect} "[ -e ${path.join(
+      sshBaseDir,
+      "manifest"
+    )} ] && cat ${path.join(
+      sshBaseDir,
+      "manifest"
+    )} | jq -r .webon_version || echo 'not_found'"`;
+
+    return this.executeCommand(checkManifestCommand);
+  }
+}
 export function executeCommand(
   command: string,
   sshCommands: SSHOperations

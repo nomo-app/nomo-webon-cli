@@ -154,8 +154,11 @@ export async function runCommandsSequentially(
   }
 }
 
-export function manifestChecks(manifestFilePath: string) {
+export function manifestChecks(
+  manifestFilePath: string,
+  serverWebOnVersion: string
+) {
   const nomoManifestContent = fs.readFileSync(manifestFilePath, "utf-8");
   const nomoManifest: NomoManifest = JSON.parse(nomoManifestContent);
-  validateManifest(nomoManifest);
+  validateManifest(nomoManifest, serverWebOnVersion);
 }
