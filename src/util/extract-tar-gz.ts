@@ -1,7 +1,7 @@
 import { logFatal } from "../util/util";
 import * as tar from "tar";
 import { resolve, join } from "path";
-import { existsSync, mkdirSync } from "fs";
+import { existsSync, mkdirSync, readdirSync, unlinkSync, rmdirSync } from "fs";
 
 const requiredFiles = ["index.html", "nomo_icon.svg", "nomo_manifest.json"];
 const cacheDirectory = "./cache";
@@ -54,24 +54,45 @@ export async function extractAndCache(args: {
 
 export function getCachedIndexHtmlPath(): string {
   const path = join(resolve(cacheOutDirectory), "index.html");
-  if (!existsSync(path)) {
-    logFatal(`Error: ${path} is missing.`);
-  }
   return path;
 }
 
 export function getCachedNomoIconPath(): string {
   const path = join(resolve(cacheOutDirectory), "nomo_icon.svg");
-  if (!existsSync(path)) {
-    logFatal(`Error: ${path} is missing.`);
-  }
   return path;
 }
 
 export function getCachedNomoManifestPath(): string {
   const path = join(resolve(cacheOutDirectory), "nomo_manifest.json");
-  if (!existsSync(path)) {
-    logFatal(`Error: ${path} is missing.`);
-  }
   return path;
+}
+
+export function clearCache() {
+  const cachePath = resolve(cacheDirectory);
+  const cacheOutPath = resolve(cacheOutDirectory);
+
+  if (!existsSync(cachePath)) {
+    console.log(`Creating cache directory: ${cachePath}`);
+    mkdirSync(cachePath);
+  }
+
+  try {
+    const contents = readdirSync(cachePath);
+
+    contents.forEach((file) => {
+      const filePath = join(cachePath, file);
+      if (existsSync(filePath) && !file.endsWith("out")) {
+        unlinkSync(filePath);
+        console.log(`Deleted: ${filePath}`);
+      }
+    });
+    if (existsSync(cacheOutPath)) {
+      rmdirSync(cacheOutPath, { recursive: true });
+      console.log(`Deleted: ${cacheOutPath}`);
+    }
+
+    console.log(`Cache directory cleared.`);
+  } catch (error) {
+    logFatal(`Error clearing cache directory: ${error}`);
+  }
 }

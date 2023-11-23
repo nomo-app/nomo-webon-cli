@@ -64,7 +64,6 @@ export async function init(args: { assetDir: string }): Promise<void> {
   const manifestFilePath = path.join(assetDir, "nomo_manifest.json");
   const cliConfigFilePath = path.join(process.cwd(), "nomo_cli.config.js");
 
-  // Check if nomo_manifest.json already exists
   if (fs.existsSync(manifestFilePath)) {
     console.log("nomo_manifest.json already exists.");
   } else {

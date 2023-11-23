@@ -43,8 +43,8 @@ export async function validateManifest(manifest: NomoManifest): Promise<void> {
   //    `min_nomo_version ${minNomoVersion} does not comply with semantic versioning regexp`
   //  );
   // }
-  // Assume you have a function similar to versionTwoGreaterThanVersionOne
-  const currentVersion = "0.1.0";
+
+  const currentVersion = "0.0.0";
   // TODO: set the currentVersion to manifest.webon_version and compare it to the manifest version from server
   console.log("currentVersion: " + currentVersion);
   console.log("webOnversion" + webOnVersion);
