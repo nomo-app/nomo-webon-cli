@@ -8,6 +8,7 @@ import {
   extractAndCache,
   getCachedNomoIconPath,
   getCachedNomoManifestPath,
+  clearCache,
 } from "../util/extract-tar-gz";
 
 import { SSHOperations } from "./ssh-operations";
@@ -47,4 +48,5 @@ export async function connectAndDeploy(args: {
   ];
 
   await runCommandsSequentially(commands);
+  clearCache();
 }
