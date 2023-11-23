@@ -15,7 +15,7 @@ import { SSHOperations } from "./ssh-operations";
 const manifestPath = getCachedNomoManifestPath();
 const iconPath = getCachedNomoIconPath();
 
-export async function connectToSSH(args: {
+export async function connectAndDeploy(args: {
   deployTarget: string;
   archive: string;
 }) {
