@@ -42,7 +42,7 @@ export async function connectAndDeploy(args: {
     sshOperations.ls(),
     sshOperations.checkCreateDir(sshBaseDir),
     sshOperations.deployFile(archive, sshHost, sshBaseDir),
-    sshOperations.deployFile(manifestPath, sshHost, sshBaseDir),
+    sshOperations.deployManifest(manifestPath, sshHost, sshBaseDir),
     sshOperations.deployFile(iconPath, sshHost, sshBaseDir),
   ];
 

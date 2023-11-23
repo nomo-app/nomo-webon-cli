@@ -41,6 +41,25 @@ export class SSHOperations {
     return `${this.scpCommand(filePath, sshHost, sshBaseDir)}`;
   }
 
+  public deployManifest(
+    filePath: string,
+    sshHost: string,
+    sshBaseDir: string
+  ): string {
+    const manifestDeployCommand = this.scpCommand(
+      filePath,
+      sshHost,
+      sshBaseDir
+    );
+    // Rename the file to "manifest" on the remote server
+    const renameManifestCommand = `${this.sshConnect} "mv ${path.join(
+      sshBaseDir,
+      path.basename(filePath)
+    )} ${path.join(sshBaseDir, "manifest")}"`;
+
+    return `${manifestDeployCommand} && ${renameManifestCommand}`;
+  }
+
   public executeCommand(command: string): string {
     return command;
   }
