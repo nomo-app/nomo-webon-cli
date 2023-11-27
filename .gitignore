@@ -31,5 +31,8 @@ out/nomo_manifest.json
 # Webon Files
 out/nomo.tar.gz
 
+# Out Dir
+out/
+
 # Cached WebOn Files
 cache/
