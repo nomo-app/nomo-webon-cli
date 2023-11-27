@@ -24,29 +24,29 @@ export async function deployWebOn(args: {
   const { rawSSH } = targetConfig;
 
   try {
+    await logs();
     await connectAndDeploy({ deployTarget, archive });
-    logs();
   } catch (e) {
-    logFatal("Failed to connect to SSH");
+    logFatal("Failed to connect to SSH" + e);
   }
 
-  function logs() {
+  async function logs() {
     if ("sshPort" in rawSSH) {
       const { sshHost, sshBaseDir, publicBaseUrl, sshPort } = rawSSH;
-      console.log(`Deployed to ${deployTarget}...`);
+      console.log("\x1b[36m", ` `);
       console.log(`SSH Host: ${sshHost}`);
       console.log(`SSH Base Directory: ${sshBaseDir}`);
       console.log(`Public Base URL: ${publicBaseUrl}`);
       console.log(`SSH Port: ${sshPort}`);
-      console.log(`Archive Path: ${archive}`);
+      console.log(`Archive Path: ${archive}`, "\x1b[0m");
     } else {
       const { sshHost, sshBaseDir, publicBaseUrl } = rawSSH;
-      console.log(`Deploying to ${deployTarget}...`);
+      console.log("\x1b[36m", ` `);
       console.log(`SSH Host: ${sshHost}`);
       console.log(`SSH Base Directory: ${sshBaseDir}`);
       console.log(`Public Base URL: ${publicBaseUrl}`);
       console.log("SSH Port is not specified");
-      console.log(`Archive Path: ${archive}`);
+      console.log(`Archive Path: ${archive}`, "\x1b[0m");
     }
   }
 }

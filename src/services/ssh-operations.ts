@@ -87,7 +87,12 @@ export class SSHOperations {
 
     return this.executeCommand(checkManifestCommand);
   }
+  public checkSshBaseDirExists(sshBaseDir: string): string {
+    const checkDirCommand = `${this.sshConnect} "[ -d ${sshBaseDir} ] && echo 'sshDir exists' || echo 'not_found'"`;
+    return this.executeCommand(checkDirCommand);
+  }
 }
+
 export function executeCommand(
   command: string,
   sshCommands: SSHOperations

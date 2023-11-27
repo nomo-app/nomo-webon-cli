@@ -60,15 +60,13 @@ export async function buildWebOn(args: { assetDir: string }) {
     {
       file: tarFilePath,
       gzip: true,
-      // Set the current working directory to the parent directory of 'out'
+
       cwd: path.dirname(outDirPath),
     },
-    // Include all files and subdirectories in the specified directory (assetDir)
-    [path.basename(outDirPath)]
-    // Adjust the prefix option to empty string to avoid creating an additional subdirectory
-  );
 
-  console.log("Build and packaging completed!");
+    [path.basename(outDirPath)]
+  );
+  console.log("\x1b[32m", "Build and packaging completed!", "\x1b[0m");
 }
 
 function checkDir(dir: string): void {

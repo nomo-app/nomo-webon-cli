@@ -72,7 +72,6 @@ export function clearCache() {
   const cacheOutPath = resolve(cacheOutDirectory);
 
   if (!existsSync(cachePath)) {
-    console.log(`Creating cache directory: ${cachePath}`);
     mkdirSync(cachePath);
   }
 
@@ -88,10 +87,7 @@ export function clearCache() {
     });
     if (existsSync(cacheOutPath)) {
       rmdirSync(cacheOutPath, { recursive: true });
-      console.log(`Deleted: ${cacheOutPath}`);
     }
-
-    console.log(`Cache directory cleared.`);
   } catch (error) {
     logFatal(`Error clearing cache directory: ${error}`);
   }

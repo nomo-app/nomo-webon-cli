@@ -11,6 +11,7 @@ import {
   getCachedNomoManifestPath,
   clearCache,
 } from "../util/extract-tar-gz";
+import { NomoConfigValidator } from "../util/validate-nomo-config";
 
 import { SSHOperations } from "./ssh-operations";
 
@@ -22,37 +23,27 @@ export async function connectAndDeploy(args: {
   archive: string;
 }) {
   const { deployTarget, archive } = args;
-  const nomoCliConfig = readCliConfig();
-  const targetConfig = nomoCliConfig.deployTargets[deployTarget];
-
-  if (!targetConfig) {
-    logFatal(`Invalid deployTarget: ${deployTarget}`);
-  }
-
-  const { rawSSH } = targetConfig;
-  const { sshHost, sshBaseDir, sshPort, publicBaseUrl } = rawSSH;
-
-  const sshOperations = new SSHOperations(sshHost, sshPort);
 
   await extractAndCache({
     tarFilePath: archive,
   });
 
-  const serverWebOnId = await runCommand(
-    sshOperations.getWebonIdIfExists(sshBaseDir)
-  );
+  const nomoCliConfig = readCliConfig();
+  const targetConfig = nomoCliConfig.deployTargets[deployTarget];
 
-  const serverWebOnVersion = await runCommand(
-    sshOperations.getWebonVersionIfExists(sshBaseDir)
-  );
-  manifestChecks(manifestPath, serverWebOnVersion, serverWebOnId);
+  const { sshOperations, sshBaseDir, publicBaseUrl } =
+    await validateDeploymentConfig(deployTarget, targetConfig.rawSSH);
 
   const commands = [
-    sshOperations.ls(),
     sshOperations.checkCreateDir(sshBaseDir),
-    sshOperations.deployManifest(manifestPath, sshHost, sshBaseDir),
-    sshOperations.deployFile(iconPath, sshHost, sshBaseDir),
-    sshOperations.deployFile(archive, sshHost, sshBaseDir),
+    sshOperations.checkSshBaseDirExists(sshBaseDir),
+    sshOperations.deployManifest(
+      manifestPath,
+      targetConfig.rawSSH.sshHost,
+      sshBaseDir
+    ),
+    sshOperations.deployFile(iconPath, targetConfig.rawSSH.sshHost, sshBaseDir),
+    sshOperations.deployFile(archive, targetConfig.rawSSH.sshHost, sshBaseDir),
   ];
 
   await runCommandsSequentially(commands);
@@ -65,11 +56,43 @@ export async function connectAndDeploy(args: {
   );
 
   if (deploymentSuccessful.every(Boolean)) {
+    const deploymentText = `Deployment successful! Your WebOn has been deployed to the following deeplink:`;
+    console.log("\x1b[32m", deploymentText, "\x1b[0m");
     console.log(
-      `Deployment successful! Your WebOn has been deployed to the following deeplink: ${publicBaseUrl}/nomo.tar.gz`
+      "\x1b[4m",
+      "\x1b[35m",
+      `${publicBaseUrl.trim()}/nomo.tar.gz`,
+      "\x1b[0m"
     );
   } else {
     console.log("Deployment failed. Check logs for details.");
   }
+
   clearCache();
+}
+
+async function validateDeploymentConfig(deployTarget: string, rawSSH: any) {
+  if (!NomoConfigValidator.isValidTargetConfig({ rawSSH })) {
+    logFatal(`Invalid deployTarget: ${deployTarget}`);
+  }
+
+  const { sshPort, sshBaseDir, publicBaseUrl } = rawSSH;
+
+  if (!NomoConfigValidator.isValidSshPort(sshPort)) {
+    logFatal(`Invalid sshPort: ${sshPort}`);
+  }
+
+  const sshOperations = new SSHOperations(rawSSH.sshHost, sshPort);
+
+  const serverWebOnId = await runCommand(
+    sshOperations.getWebonIdIfExists(sshBaseDir)
+  );
+
+  const serverWebOnVersion = await runCommand(
+    sshOperations.getWebonVersionIfExists(sshBaseDir)
+  );
+
+  manifestChecks(manifestPath, serverWebOnVersion, serverWebOnId);
+
+  return { sshOperations, sshBaseDir, publicBaseUrl };
 }
