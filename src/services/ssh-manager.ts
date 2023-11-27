@@ -57,13 +57,13 @@ export async function connectAndDeploy(args: {
 
   if (deploymentSuccessful.every(Boolean)) {
     const deploymentText = `Deployment successful! Your WebOn has been deployed to the following deeplink:`;
+
+    const webonUrl = `${publicBaseUrl.trim()}/nomo.tar.gz`;
+    const deeplink = webonUrl
+      .replace("http://", "http://nomo.app/webon/")
+      .replace("https://", "https://nomo.app/webon/");
     console.log("\x1b[32m", deploymentText, "\x1b[0m");
-    console.log(
-      "\x1b[4m",
-      "\x1b[35m",
-      `${publicBaseUrl.trim()}/nomo.tar.gz`,
-      "\x1b[0m"
-    );
+    console.log("\x1b[4m", "\x1b[35m", deeplink, "\x1b[0m");
   } else {
     console.log("Deployment failed. Check logs for details.");
   }

@@ -63,15 +63,14 @@ export async function validateManifest(
   console.log("ServerWebOnversion: " + serverWebOnVersion);
   if (versionTwoGreaterThanVersionOne(serverWebOnVersion, currentVersion)) {
     throw new WebOnError(
-      `Your WebOn is outdated! This WebOn requires at least ${serverWebOnVersion} + 1, but the current version is ${currentVersion}`
+      `Cannot rollback to older WebOn-version! The server version is ${serverWebOnVersion}, but the local version is ${currentVersion}`
     );
   } else if (currentVersion.trim() === serverWebOnVersion.trim()) {
     throw new WebOnError(
-      `Your webOn version is equal to the version your already uploaded: ${serverWebOnVersion}, please update your webOn_version in nomo_manifest.json.`
+      `Your WebOn version is equal to the version your already uploaded: ${serverWebOnVersion}, please increase your webOn_version in nomo_manifest.json.`
     );
   }
 }
-//}
 
 function _isValidSemanticVersion(version: string): boolean {
   const pattern = /^(\d+)\.(\d+)\.(\d+)$/;

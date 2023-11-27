@@ -20,7 +20,8 @@
     "link": "npm link",
     "clean": "rm -rf ./dist",
     "test": "jest --testTimeout=10000",
-    "prepublishOnly": "git diff --exit-code"
+    "prepublishOnly": "git diff --exit-code",
+    "deploy": "nomo-webon-cli build out && nomo-webon-cli deploy out/nomo.tar.gz production"
   },
   "dependencies": {
     "commander": "^6.1.0",
