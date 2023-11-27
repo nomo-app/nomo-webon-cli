@@ -1,8 +1,8 @@
-import { runCliTestExpectFailure } from "../../test-util/test-util";
+import { runE2ETestExpectFailure } from "../../test-util/test-util";
 import { getDebugPath } from "../../../src/util/util";
 
 test("archive not existing", async () => {
-  const output = await runCliTestExpectFailure(
+  const output = await runE2ETestExpectFailure(
     "deploy some-non-existing-archive"
   );
   expect(output).toBe(
@@ -11,6 +11,6 @@ test("archive not existing", async () => {
 });
 
 test("archive not a file", async () => {
-  const output = await runCliTestExpectFailure("deploy src");
+  const output = await runE2ETestExpectFailure("deploy src");
   expect(output).toBe(`error: ${getDebugPath("src")} is a directory.\n`);
 });

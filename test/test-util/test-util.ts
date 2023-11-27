@@ -9,7 +9,7 @@ export function buildCliCommand(args: string) {
   }
 }
 
-export async function runCliTest(
+export async function runE2ETest(
   args: string,
   options?: { pwd?: string; maxTime?: number }
 ): Promise<string> {
@@ -17,8 +17,7 @@ export async function runCliTest(
   return await runCommand(cmd, options?.pwd);
 }
 
-
-export async function runCliTestExpectFailure(
+export async function runE2ETestExpectFailure(
   args: string,
   pwd?: string
 ): Promise<string> {
