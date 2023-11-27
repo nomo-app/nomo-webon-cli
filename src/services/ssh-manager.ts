@@ -3,6 +3,7 @@ import {
   readCliConfig,
   runCommandsSequentially,
   manifestChecks,
+  runCommand,
 } from "../util/util";
 import {
   extractAndCache,
@@ -37,12 +38,16 @@ export async function connectAndDeploy(args: {
     tarFilePath: archive,
   });
 
-  const serverWebOnVersion = sshOperations.getWebonVersionIfExists(sshBaseDir);
-  console.log(serverWebOnVersion);
-  manifestChecks(manifestPath, serverWebOnVersion);
+  const serverWebOnId = await runCommand(
+    sshOperations.getWebonIdIfExists(sshBaseDir)
+  );
+
+  const serverWebOnVersion = await runCommand(
+    sshOperations.getWebonVersionIfExists(sshBaseDir)
+  );
+  manifestChecks(manifestPath, serverWebOnVersion, serverWebOnId);
 
   const commands = [
-    sshOperations.getWebonVersionIfExists(sshBaseDir),
     sshOperations.ls(),
     sshOperations.checkCreateDir(sshBaseDir),
     sshOperations.deployManifest(manifestPath, sshHost, sshBaseDir),

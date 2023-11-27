@@ -154,11 +154,12 @@ export async function runCommandsSequentially(
   }
 }
 
-export function manifestChecks(
+export async function manifestChecks(
   manifestFilePath: string,
-  serverWebOnVersion: string
-) {
+  serverWebOnVersion: string,
+  serverWebOnId: string
+): Promise<void> {
   const nomoManifestContent = fs.readFileSync(manifestFilePath, "utf-8");
   const nomoManifest: NomoManifest = JSON.parse(nomoManifestContent);
-  validateManifest(nomoManifest, serverWebOnVersion);
+  validateManifest(nomoManifest, serverWebOnVersion, serverWebOnId);
 }

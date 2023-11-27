@@ -75,6 +75,18 @@ export class SSHOperations {
 
     return this.executeCommand(checkManifestCommand);
   }
+
+  public getWebonIdIfExists(sshBaseDir: string): string {
+    const checkManifestCommand = `${this.sshConnect} "[ -e ${path.join(
+      sshBaseDir,
+      "manifest"
+    )} ] && cat ${path.join(
+      sshBaseDir,
+      "manifest"
+    )} | jq -r .webon_id || echo 'not_found'"`;
+
+    return this.executeCommand(checkManifestCommand);
+  }
 }
 export function executeCommand(
   command: string,

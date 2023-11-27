@@ -11,7 +11,8 @@ class WebOnError extends Error {
 
 export async function validateManifest(
   manifest: NomoManifest,
-  serverWebOnVersion: string
+  serverWebOnVersion: string,
+  serverWebOnId: string
 ): Promise<void> {
   const webonVersion = manifest.webon_version;
 
@@ -38,25 +39,33 @@ export async function validateManifest(
   }
 
   const minNomoVersion = manifest.min_nomo_version;
-  const webOnVersion = manifest.webon_version;
 
-  //if (minNomoVersion != null) {
-  // if (!_isValidSemanticVersion(minNomoVersion)) {
-  //  throw new WebOnError(
-  //    `min_nomo_version ${minNomoVersion} does not comply with semantic versioning regexp`
-  //  );
-  // }
-
+  if (minNomoVersion != null) {
+    if (!_isValidSemanticVersion(minNomoVersion)) {
+      throw new WebOnError(
+        `min_nomo_version ${minNomoVersion} does not comply with semantic versioning regexp`
+      );
+    }
+  }
+  const currentWebOnId = manifest.webon_id;
   const currentVersion = manifest.webon_version;
 
-  // TODO: set the currentVersion to manifest.webon_version and compare it to the manifest version from server
-  console.log("currentVersion: " + currentVersion);
-  console.log("webOnversion" + serverWebOnVersion);
-  if (versionTwoGreaterThanVersionOne(currentVersion, serverWebOnVersion)) {
+  if (
+    serverWebOnId.trim() !== "not_found" &&
+    currentWebOnId.trim() !== serverWebOnId.trim()
+  ) {
     throw new WebOnError(
-      `Your WebOn is outdated! This WebOn requires ${serverWebOnVersion}, but the current version is ${currentVersion}`
+      `Overwriting a different webOn is not allowed. Your webon_id: ${currentWebOnId}. The id on server: ${serverWebOnId} `
     );
-  } else if (currentVersion === serverWebOnVersion) {
+  }
+
+  console.log("CurrentWebOnVersion: " + currentVersion);
+  console.log("ServerWebOnversion: " + serverWebOnVersion);
+  if (versionTwoGreaterThanVersionOne(serverWebOnVersion, currentVersion)) {
+    throw new WebOnError(
+      `Your WebOn is outdated! This WebOn requires at least ${serverWebOnVersion} + 1, but the current version is ${currentVersion}`
+    );
+  } else if (currentVersion.trim() === serverWebOnVersion.trim()) {
     throw new WebOnError(
       `Your webOn version is equal to the version your already uploaded: ${serverWebOnVersion}, please update your webOn_version in nomo_manifest.json.`
     );
