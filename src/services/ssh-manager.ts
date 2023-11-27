@@ -30,7 +30,7 @@ export async function connectAndDeploy(args: {
   }
 
   const { rawSSH } = targetConfig;
-  const { sshHost, sshBaseDir, sshPort } = rawSSH;
+  const { sshHost, sshBaseDir, sshPort, publicBaseUrl } = rawSSH;
 
   const sshOperations = new SSHOperations(sshHost, sshPort);
 
@@ -56,5 +56,20 @@ export async function connectAndDeploy(args: {
   ];
 
   await runCommandsSequentially(commands);
+
+  const deploymentSuccessful = await Promise.all(
+    commands.map(async (command) => {
+      const result = await runCommand(command);
+      return result !== "not_found";
+    })
+  );
+
+  if (deploymentSuccessful.every(Boolean)) {
+    console.log(
+      `Deployment successful! Your WebOn has been deployed to the following deeplink: ${publicBaseUrl}/nomo.tar.gz`
+    );
+  } else {
+    console.log("Deployment failed. Check logs for details.");
+  }
   clearCache();
 }
