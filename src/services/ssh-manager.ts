@@ -2,7 +2,6 @@ import {
   logFatal,
   readCliConfig,
   runCommandsSequentially,
-  manifestChecks,
   runCommand,
 } from "../util/util";
 import {
@@ -12,6 +11,7 @@ import {
   clearCache,
 } from "../util/extract-tar-gz";
 import { NomoConfigValidator } from "../util/validate-nomo-config";
+import { manifestChecks } from "../util/validate-manifest";
 
 import { SSHOperations } from "./ssh-operations";
 

@@ -3,9 +3,6 @@ import { join, resolve } from "path";
 import semver from "semver";
 import { NomoCliConfigs } from "../init/interface";
 import { exec } from "child_process";
-import { NomoManifest } from "../init/interface";
-import * as fs from "fs";
-import { validateManifest } from "../util/validate-manifest";
 
 let _isUnitTest: boolean = false;
 
@@ -152,14 +149,4 @@ export async function runCommandsSequentially(
   for (const command of commands) {
     await runCommand(command);
   }
-}
-
-export async function manifestChecks(
-  manifestFilePath: string,
-  serverWebOnVersion: string,
-  serverWebOnId: string
-): Promise<void> {
-  const nomoManifestContent = fs.readFileSync(manifestFilePath, "utf-8");
-  const nomoManifest: NomoManifest = JSON.parse(nomoManifestContent);
-  validateManifest(nomoManifest, serverWebOnVersion, serverWebOnId);
 }

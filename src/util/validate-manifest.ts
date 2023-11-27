@@ -1,5 +1,6 @@
 import { NomoManifest } from "../init/interface";
 import { logFatal } from "../util/util";
+import * as fs from "fs";
 
 class WebOnError extends Error {
   constructor(message: string) {
@@ -103,4 +104,14 @@ export function isValidWebOnId(webon_id: string): boolean {
   const webonIdRegExp =
     /^(?:[a-zA-Z0-9_-]+\.)*[a-zA-Z0-9_-]+(?:\.[a-zA-Z0-9_-]+)+$/;
   return webonIdRegExp.test(webon_id);
+}
+
+export async function manifestChecks(
+  manifestFilePath: string,
+  serverWebOnVersion: string,
+  serverWebOnId: string
+): Promise<void> {
+  const nomoManifestContent = fs.readFileSync(manifestFilePath, "utf-8");
+  const nomoManifest: NomoManifest = JSON.parse(nomoManifestContent);
+  validateManifest(nomoManifest, serverWebOnVersion, serverWebOnId);
 }
