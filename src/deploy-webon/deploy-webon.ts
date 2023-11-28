@@ -12,6 +12,7 @@ export async function deployWebOn(args: {
 }) {
   const { deployTarget, archive } = args;
   checkNotDir(archive);
+
   checkIfTarGz(archive);
 
   const nomoCliConfig = readCliConfig();

@@ -50,7 +50,7 @@ function runCommandExpectFailure(
   cmd = buildFinalCommand(cmd, pwd);
   console.log(`Run expect-fail-command \'${cmd}\'`);
   return new Promise((resolve, reject) => {
-    exec(cmd, { env: env }, (error, stdout, stderr) => {
+    exec(cmd, { env: env, shell: "/bin/bash" }, (error, stdout, stderr) => {
       console.log(stdout);
       if (error) {
         console.log(stderr);

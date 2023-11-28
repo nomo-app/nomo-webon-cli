@@ -1,7 +1,8 @@
-import { logFatal } from "../util/util";
+import { logFatal, checkDir } from "../util/util";
 import { existsSync, mkdirSync, unlinkSync, renameSync } from "fs";
 import * as path from "path";
 import tar from "tar";
+import * as fs from "fs";
 
 export function renameAssetDir(assetDir: string): void {
   try {
@@ -88,14 +89,4 @@ async function createTarFile(
     },
     [path.basename(outDirPath)]
   );
-}
-
-function checkDir(dir: string): void {
-  if (!existsSync(dir)) {
-    logFatal(`${getDebugPath(dir)} does not exist.`);
-  }
-}
-
-function getDebugPath(paths: string): string {
-  return `\'${path.resolve(paths)}\'`;
 }
