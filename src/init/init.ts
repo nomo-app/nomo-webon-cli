@@ -3,9 +3,8 @@ import * as path from "path";
 import { NomoManifest, NomoCliConfig, GeneratedFile } from "./interface";
 import { isValidWebOnId } from "../util/validate-manifest";
 
+const inquirer = require("inquirer");
 async function getUserInput({ prompt }: { prompt: string }): Promise<string> {
-  const inquirer = require("inquirer");
-
   const { userInput } = await (inquirer as any).prompt([
     {
       type: "input",
@@ -24,12 +23,36 @@ async function generateNomoManifestContent({
   webonId: string;
   webonName: string;
 }): Promise<NomoManifest> {
+  const availablePermissions = [
+    "nomo.permission.CAMERA",
+    "nomo.permission.SEND_MESSAGE",
+    "nomo.permission.SEND_ASSETS",
+    "nomo.permission.READ_MEDIA",
+    "nomo.permission.DEVICE_FINGERPRINTING",
+    "nomo.permission.ADD_CUSTOM_TOKEN",
+    "nomo.permission.SIGN_EVM_TRANSACTION",
+    "nomo.permission.SIGN_EVM_MESSAGE",
+    "nomo.permission.GET_INSTALLED_WEBONS",
+    "nomo.permission.INSTALL_WEBON",
+  ];
+
+  const { selectedPermissions } = await (inquirer as any).prompt([
+    {
+      type: "checkbox",
+      message: "Select permissions:",
+      name: "selectedPermissions",
+      choices: availablePermissions,
+      default: [],
+    },
+  ]);
+
   return {
     nomo_manifest_version: "1.1.0",
     webon_id: webonId,
     webon_name: webonName,
     webon_version: "0.1.0",
-    permissions: [],
+    min_nomo_version: "0.3.4",
+    permissions: selectedPermissions,
   };
 }
 
@@ -63,7 +86,11 @@ function generateNomoCliConfigContent({
 
 function writeFile(file: GeneratedFile): void {
   fs.writeFileSync(file.filePath, file.content);
-  console.log(`${path.basename(file.filePath)} created successfully.`);
+  console.log(
+    "\x1b[32m",
+    `${path.basename(file.filePath)} created successfully.`,
+    "\x1b[0m"
+  );
 }
 
 export async function init(args: { assetDir: string }): Promise<void> {
