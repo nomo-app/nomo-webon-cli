@@ -3,7 +3,10 @@ import { join } from "path";
 
 export function buildCliCommand(args: string) {
   if (process.platform === "win32") {
-    return `node "${join(process.cwd(), "bin", "nomo-webon-cli")}" ${args}`;
+    return `node "${join(process.cwd(), "bin", "nomo-webon-cli").replace(
+      /\\/g,
+      "\\\\"
+    )}" ${args}`;
   } else {
     return `${join(process.cwd(), "bin", "nomo-webon-cli")} ${args}`;
   }
