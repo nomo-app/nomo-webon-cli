@@ -10,26 +10,30 @@ class WebOnError extends Error {
   }
 }
 
-export async function validateManifest(
-  manifest: NomoManifest,
-  serverWebOnVersion: string,
-  serverWebOnId: string
-): Promise<void> {
+export async function validateManifest({
+  manifest,
+  serverWebOnVersion,
+  serverWebOnId,
+}: {
+  manifest: NomoManifest;
+  serverWebOnVersion: string;
+  serverWebOnId: string;
+}): Promise<void> {
   const webonVersion = manifest.webon_version;
 
-  if (!_isValidSemanticVersion(webonVersion)) {
+  if (!_isValidSemanticVersion({ version: webonVersion })) {
     throw new WebOnError(
       `webon_version ${webonVersion} does not comply with semantic versioning regexp`
     );
   }
 
   const webonId = manifest.webon_id;
-  if (!isValidWebOnId(webonId)) {
+  if (!isValidWebOnId({ webon_id: webonId })) {
     throw new WebOnError(`webon_id ${webonId} does not comply with regexp`);
   }
 
   const manifestVersion = manifest.nomo_manifest_version;
-  if (!_isValidSemanticVersion(manifestVersion)) {
+  if (!_isValidSemanticVersion({ version: manifestVersion })) {
     throw new WebOnError(
       `nomo_manifest_version ${manifestVersion} does not comply with semantic versioning regexp`
     );
@@ -42,7 +46,7 @@ export async function validateManifest(
   const minNomoVersion = manifest.min_nomo_version;
 
   if (minNomoVersion != null) {
-    if (!_isValidSemanticVersion(minNomoVersion)) {
+    if (!_isValidSemanticVersion({ version: minNomoVersion })) {
       throw new WebOnError(
         `min_nomo_version ${minNomoVersion} does not comply with semantic versioning regexp`
       );
@@ -62,27 +66,35 @@ export async function validateManifest(
 
   console.log("CurrentWebOnVersion: " + currentVersion);
   console.log("ServerWebOnversion: " + serverWebOnVersion);
-  if (versionTwoGreaterThanVersionOne(serverWebOnVersion, currentVersion)) {
+  if (
+    versionTwoGreaterThanVersionOne({
+      versionTwo: serverWebOnVersion,
+      versionOne: currentVersion,
+    })
+  ) {
     throw new WebOnError(
       `Cannot rollback to older WebOn-version! The server version is ${serverWebOnVersion}, but the local version is ${currentVersion}`
     );
   } else if (currentVersion.trim() === serverWebOnVersion.trim()) {
     throw new WebOnError(
-      `Your WebOn version is equal to the version your already uploaded: ${serverWebOnVersion}, please increase your webOn_version in nomo_manifest.json.`
+      `Your WebOn version is equal to the version your already uploaded: ${serverWebOnVersion} please increase your webOn_version in nomo_manifest.json.`
     );
   }
 }
 
-function _isValidSemanticVersion(version: string): boolean {
+function _isValidSemanticVersion({ version }: { version: string }): boolean {
   const pattern = /^(\d+)\.(\d+)\.(\d+)$/;
   const regex = new RegExp(pattern);
   return regex.test(version);
 }
 
-function versionTwoGreaterThanVersionOne(
-  versionTwo: string,
-  versionOne: string
-): boolean {
+function versionTwoGreaterThanVersionOne({
+  versionTwo,
+  versionOne,
+}: {
+  versionTwo: string;
+  versionOne: string;
+}): boolean {
   const v1Components = versionOne.split(".");
   const v2Components = versionTwo.split(".");
 
@@ -100,18 +112,26 @@ function versionTwoGreaterThanVersionOne(
   return false;
 }
 
-export function isValidWebOnId(webon_id: string): boolean {
+export function isValidWebOnId({ webon_id }: { webon_id: string }): boolean {
   const webonIdRegExp =
     /^(?:[a-zA-Z0-9_-]+\.)*[a-zA-Z0-9_-]+(?:\.[a-zA-Z0-9_-]+)+$/;
   return webonIdRegExp.test(webon_id);
 }
 
-export async function manifestChecks(
-  manifestFilePath: string,
-  serverWebOnVersion: string,
-  serverWebOnId: string
-): Promise<void> {
+export async function manifestChecks({
+  manifestFilePath,
+  serverWebOnVersion,
+  serverWebOnId,
+}: {
+  manifestFilePath: string;
+  serverWebOnVersion: string;
+  serverWebOnId: string;
+}): Promise<void> {
   const nomoManifestContent = fs.readFileSync(manifestFilePath, "utf-8");
   const nomoManifest: NomoManifest = JSON.parse(nomoManifestContent);
-  validateManifest(nomoManifest, serverWebOnVersion, serverWebOnId);
+  validateManifest({
+    manifest: nomoManifest,
+    serverWebOnVersion: serverWebOnVersion,
+    serverWebOnId: serverWebOnId,
+  });
 }

@@ -64,9 +64,9 @@ export function getDebugPath(path: string): string {
 
 export function logFatal(msg: string): never {
   if (isUnitTest()) {
-    throw new Error(`error: ${msg}`);
+    throw new Error(`ERROR: ${msg}`);
   } else {
-    console.error("\x1b[31m", `error: ${msg}`);
+    console.error("\x1b[31m", `ERROR: ${msg}`);
     process.exit(1);
   }
 
@@ -127,7 +127,13 @@ export function compareSemanticVersions(versionA: string, versionB: string) {
   return 0; // versions are equal
 }
 
-export function runCommand(cmd: string, pwd?: string): Promise<string> {
+export function runCommand({
+  cmd,
+  pwd,
+}: {
+  cmd: string;
+  pwd?: string;
+}): Promise<string> {
   console.log(`Run command \'${cmd}\'`);
   return new Promise((resolve, reject) => {
     exec(cmd, (error, stdout, stderr) => {
@@ -143,10 +149,12 @@ export function runCommand(cmd: string, pwd?: string): Promise<string> {
   });
 }
 
-export async function runCommandsSequentially(
-  commands: string[]
-): Promise<void> {
+export async function runCommandsSequentially({
+  commands,
+}: {
+  commands: string[];
+}): Promise<void> {
   for (const command of commands) {
-    await runCommand(command);
+    await runCommand({ cmd: command });
   }
 }

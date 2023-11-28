@@ -35,22 +35,30 @@ export async function connectAndDeploy(args: {
     await validateDeploymentConfig(deployTarget, targetConfig.rawSSH);
 
   const commands = [
-    sshOperations.checkCreateDir(sshBaseDir),
-    sshOperations.checkSshBaseDirExists(sshBaseDir),
-    sshOperations.deployManifest(
-      manifestPath,
-      targetConfig.rawSSH.sshHost,
-      sshBaseDir
-    ),
-    sshOperations.deployFile(iconPath, targetConfig.rawSSH.sshHost, sshBaseDir),
-    sshOperations.deployFile(archive, targetConfig.rawSSH.sshHost, sshBaseDir),
+    sshOperations.checkCreateDir({ sshBaseDir: sshBaseDir }),
+    sshOperations.checkSshBaseDirExists({ sshBaseDir: sshBaseDir }),
+    sshOperations.deployManifest({
+      filePath: manifestPath,
+      sshHost: targetConfig.rawSSH.sshHost,
+      sshBaseDir: sshBaseDir,
+    }),
+    sshOperations.deployFile({
+      filePath: iconPath,
+      sshHost: targetConfig.rawSSH.sshHost,
+      sshBaseDir: sshBaseDir,
+    }),
+    sshOperations.deployFile({
+      filePath: archive,
+      sshHost: targetConfig.rawSSH.sshHost,
+      sshBaseDir: sshBaseDir,
+    }),
   ];
 
-  await runCommandsSequentially(commands);
+  await runCommandsSequentially({ commands: commands });
 
   const deploymentSuccessful = await Promise.all(
     commands.map(async (command) => {
-      const result = await runCommand(command);
+      const result = await runCommand({ cmd: command });
       return result !== "not_found";
     })
   );
@@ -82,17 +90,24 @@ async function validateDeploymentConfig(deployTarget: string, rawSSH: any) {
     logFatal(`Invalid sshPort: ${sshPort}`);
   }
 
-  const sshOperations = new SSHOperations(rawSSH.sshHost, sshPort);
+  const sshOperations = new SSHOperations({
+    sshHost: rawSSH.sshHost,
+    sshPort: sshPort,
+  });
 
-  const serverWebOnId = await runCommand(
-    sshOperations.getWebonIdIfExists(sshBaseDir)
-  );
+  const serverWebOnId = await runCommand({
+    cmd: sshOperations.getWebonIdIfExists({ sshBaseDir: sshBaseDir }),
+  });
 
-  const serverWebOnVersion = await runCommand(
-    sshOperations.getWebonVersionIfExists(sshBaseDir)
-  );
+  const serverWebOnVersion = await runCommand({
+    cmd: sshOperations.getWebonVersionIfExists({ sshBaseDir: sshBaseDir }),
+  });
 
-  manifestChecks(manifestPath, serverWebOnVersion, serverWebOnId);
+  manifestChecks({
+    manifestFilePath: manifestPath,
+    serverWebOnVersion: serverWebOnVersion,
+    serverWebOnId: serverWebOnId,
+  });
 
   return { sshOperations, sshBaseDir, publicBaseUrl };
 }
