@@ -2,12 +2,9 @@ import { exec } from "child_process";
 import { join } from "path";
 
 export function buildCliCommand(args: string) {
+  const cliCommand = process.platform === "win32" ? "nomo-webon-cli" : join(process.cwd(), "bin", "nomo-webon-cli");
   
-  if (process.platform === "win32") {
-    return `node bin\\nomo-webon-cli ${args}`;
-  } else {
-    return `${join(process.cwd(), "bin", "nomo-webon-cli")} ${args}`;
-  }
+  return `${process.platform === "win32" ? "npx " : ""}${cliCommand} ${args}`;
 }
 
 export async function runE2ETest(
@@ -50,11 +47,12 @@ function runCommandExpectFailure(
 ): Promise<string> {
   cmd = buildFinalCommand(cmd, pwd);
   console.log(`Run expect-fail-command \'${cmd}\'`);
+
   return new Promise((resolve, reject) => {
-    exec(cmd, { env: env, shell: "/bin/bash" }, (error, stdout, stderr) => {
+    exec(cmd,{env: env}, (error, stdout, stderr) => {
       console.log(stdout);
-      if (error) {
-        console.log(stderr);
+      console.log(stderr);
+      if (error && error.code !== 0) {
         resolve(stdout + stderr);
       } else {
         console.error(
