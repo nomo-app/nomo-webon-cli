@@ -47,13 +47,15 @@ async function generateNomoManifestContent({
     },
   ]);
 
+  const permissions = selectedPermissions.length > 0 ? selectedPermissions : [];
+
   return {
     nomo_manifest_version: "1.1.0",
     webon_id: webonId,
     webon_name: webonName,
     webon_version: "0.1.0",
     min_nomo_version: "0.3.4",
-    permissions: selectedPermissions,
+    permissions: permissions,
   };
 }
 
@@ -85,7 +87,6 @@ function generateNomoCliConfigContent({
   };
 }
 
-
 function writeFile(file: GeneratedFile): Promise<void> {
   return new Promise((resolve, reject) => {
     fs.writeFile(file.filePath, file.content, (err) => {
@@ -93,9 +94,11 @@ function writeFile(file: GeneratedFile): Promise<void> {
         console.error(`Error writing file ${file.filePath}:`, err);
         reject(err);
       } else {
-        console.log("\x1b[32m",
-        `${path.basename(file.filePath)} created successfully.`,
-        "\x1b[0m");
+        console.log(
+          "\x1b[32m",
+          `${path.basename(file.filePath)} created successfully.`,
+          "\x1b[0m"
+        );
         resolve();
       }
     });
