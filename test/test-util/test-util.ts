@@ -2,11 +2,9 @@ import { exec } from "child_process";
 import { join } from "path";
 
 export function buildCliCommand(args: string) {
+  return `node bin\\nomo-webon-cli ${args}`;
   if (process.platform === "win32") {
-    return `node "${join(process.cwd(), "bin", "nomo-webon-cli").replace(
-      /\\/g,
-      "\\\\"
-    )}" ${args}`;
+    return `node bin\nomo-webon-cli ${args}`;
   } else {
     return `${join(process.cwd(), "bin", "nomo-webon-cli")} ${args}`;
   }
@@ -70,7 +68,7 @@ function runCommandExpectFailure(
 
 function buildFinalCommand(cmd: string, pwd?: string) {
   if (pwd) {
-    return `( cd "${pwd}" && ${cmd} )`;
+   return cmd;
   } else {
     return cmd;
   }
