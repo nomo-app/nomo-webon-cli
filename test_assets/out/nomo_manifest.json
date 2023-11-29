@@ -1,0 +1,12 @@
+{
+  "nomo_manifest_version": "1.1.0",
+  "webon_id": "cli.test.app",
+  "webon_name": "Cli Test",
+  "webon_version": "0.1.0",
+  "min_nomo_version": "0.3.4",
+  "permissions": [
+    "nomo.permission.SEND_MESSAGE",
+    "nomo.permission.SEND_ASSETS",
+    "nomo.permission.READ_MEDIA"
+  ]
+}

@@ -43,13 +43,13 @@ export async function buildWebOn(args: { assetDir: string }): Promise<void> {
   const outDirPath = isOutDir ? assetDir : path.resolve(assetDir, "..", "out");
 
   checkDir(assetDir);
-  renameAssetDir(assetDir);
+  //renameAssetDir(assetDir);
 
-  if (!isOutDir) {
-    console.log("Directories are already named correctly, no need to rename.");
-  }
+  //  if (!isOutDir) {
+  //    console.log("Directories are already named correctly, no need to rename.");
+  //  }
 
-  createOutDir(outDirPath);
+  // createOutDir(outDirPath);
 
   const missingFiles = checkRequiredFiles(outDirPath);
 

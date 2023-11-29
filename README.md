@@ -48,7 +48,7 @@ Add `nomo-webon-cli` to your dev-dependencies:
 
 `npm install --save-dev nomo-webon-cli`
 
-Alternatively, you can run it via npx:
+For Windows, you can run it via npx:
 
 `npx nomo-webon-cli --help`
 
