@@ -2,6 +2,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { NomoManifest, NomoCliConfig, GeneratedFile } from "./interface";
 import { isValidWebOnId } from "../util/validate-manifest";
+import { checkDir } from "../util/util";
 
 const inquirer = require("inquirer");
 async function getUserInput({ prompt }: { prompt: string }): Promise<string> {
@@ -84,19 +85,29 @@ function generateNomoCliConfigContent({
   };
 }
 
-function writeFile(file: GeneratedFile): void {
-  fs.writeFileSync(file.filePath, file.content);
-  console.log(
-    "\x1b[32m",
-    `${path.basename(file.filePath)} created successfully.`,
-    "\x1b[0m"
-  );
+
+function writeFile(file: GeneratedFile): Promise<void> {
+  return new Promise((resolve, reject) => {
+    fs.writeFile(file.filePath, file.content, (err) => {
+      if (err) {
+        console.error(`Error writing file ${file.filePath}:`, err);
+        reject(err);
+      } else {
+        console.log("\x1b[32m",
+        `${path.basename(file.filePath)} created successfully.`,
+        "\x1b[0m");
+        resolve();
+      }
+    });
+  });
 }
 
 export async function init(args: { assetDir: string }): Promise<void> {
   const assetDir = args.assetDir;
   const manifestFilePath = path.join(assetDir, "nomo_manifest.json");
   const cliConfigFilePath = path.join(process.cwd(), "nomo_cli.config.js");
+
+  checkDir(assetDir);
 
   if (fs.existsSync(manifestFilePath)) {
     console.log("nomo_manifest.json already exists.");
@@ -111,7 +122,7 @@ export async function init(args: { assetDir: string }): Promise<void> {
       webonName: webonName,
     });
 
-    writeFile({
+    await writeFile({
       filePath: manifestFilePath,
       content: JSON.stringify(nomoManifest, null, 2),
     });
@@ -127,7 +138,7 @@ export async function init(args: { assetDir: string }): Promise<void> {
     const webonId = nomoManifest.webon_id;
     const nomoCliConfig = generateNomoCliConfigContent({ webonId: webonId });
 
-    writeFile({
+    await writeFile({
       filePath: cliConfigFilePath,
       content: `/**
  * This is a sample configuration that can be adapted to your needs.
