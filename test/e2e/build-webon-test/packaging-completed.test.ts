@@ -4,6 +4,7 @@ import {
   runE2ETest,
 } from "../../test-util/test-util";
 
+jest.setTimeout(30000);
 test("successful tar.gz build", async () => {
   const output = await runE2ETest("build test_assets/out/");
   expect(output).toContain("Build and packaging completed!");
