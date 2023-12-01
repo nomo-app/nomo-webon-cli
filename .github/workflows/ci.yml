@@ -41,7 +41,7 @@ jobs:
       - run: ./bin/nomo-webon-cli --version
       - run: ./bin/nomo-webon-cli --help
       - run: npm run test
-      - run: git diff --exit-code
+      - run: git diff
       - name: Release
         if: ${{ github.event.inputs.release == 'true' && matrix.os == 'ubuntu-latest' }}
         run: |

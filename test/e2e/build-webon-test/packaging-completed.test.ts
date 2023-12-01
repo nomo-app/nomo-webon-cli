@@ -9,6 +9,8 @@ test("successful tar.gz build", async () => {
   expect(output).toContain("Build and packaging completed!");
   const existsFile = fs.existsSync("test_assets/out/nomo.tar.gz");
   expect(existsFile).toBe(true);
+  await new Promise((resolve) => setTimeout(resolve, 5000));
+  fs.unlinkSync("test_assets/out/nomo.tar.gz");
 });
 
 test("missing required file", async () => {
