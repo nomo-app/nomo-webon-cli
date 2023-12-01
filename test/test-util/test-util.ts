@@ -14,7 +14,7 @@ export async function runE2ETest(
   args: string,
   options?: { pwd?: string; maxTime?: number }
 ): Promise<string> {
-  const cmd = buildCliCommand(args);
+  const cmd = await buildCliCommand(args);
   return await runCommand(cmd, options?.pwd);
 }
 
