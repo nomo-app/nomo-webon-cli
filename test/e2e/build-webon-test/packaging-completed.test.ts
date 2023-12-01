@@ -7,11 +7,11 @@ import {
 jest.setTimeout(30000);
 test("successful tar.gz build", async () => {
   const output = await runE2ETest("build test_assets/out/");
-  await new Promise((resolve) => setTimeout(resolve, 2000));
+  await new Promise((resolve) => setTimeout(resolve, 5000));
   expect(output).toContain("Build and packaging completed!");
   const existsFile = fs.existsSync("test_assets/out/nomo.tar.gz");
   expect(existsFile).toBe(true);
-  await new Promise((resolve) => setTimeout(resolve, 2000));
+  await new Promise((resolve) => setTimeout(resolve, 5000));
   fs.unlinkSync("test_assets/out/nomo.tar.gz");
 });
 

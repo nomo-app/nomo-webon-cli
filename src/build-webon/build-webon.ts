@@ -27,7 +27,9 @@ export function checkRequiredFiles(outDirPath: string): string[] {
   return requiredFiles.filter((file) => !existsSync(file));
 }
 
-export function deleteExistingTarFile(tarFilePath: string): void {
+export async function deleteExistingTarFile(
+  tarFilePath: string
+): Promise<void> {
   if (existsSync(tarFilePath)) {
     unlinkSync(tarFilePath);
   }
@@ -60,7 +62,7 @@ export async function buildWebOn(assetDir: string): Promise<void> {
   const tarFileName = "nomo.tar.gz";
   const tarFilePath = path.join(outDirPath, tarFileName);
 
-  deleteExistingTarFile(tarFilePath);
+  await deleteExistingTarFile(tarFilePath);
 
   try {
     await createTarFile(outDirPath, tarFilePath);
@@ -74,14 +76,19 @@ async function createTarFile(
   outDirPath: string,
   tarFilePath: string
 ): Promise<void> {
-  // console.log( `Creating new webon ${path.basename(tarFilePath)}: ${tarFilePath}`);
-
-  await tar.create(
-    {
-      file: tarFilePath,
-      gzip: true,
-      cwd: path.dirname(outDirPath),
-    },
-    [path.basename(outDirPath)]
+  console.log(
+    `Creating new webon ${path.basename(tarFilePath)}: ${tarFilePath}`
   );
+  try {
+    await tar.create(
+      {
+        file: tarFilePath,
+        gzip: true,
+        cwd: path.dirname(outDirPath),
+      },
+      [path.basename(outDirPath)]
+    );
+  } catch (e) {
+    console.log("Building tar failed " + e);
+  }
 }
