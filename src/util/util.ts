@@ -3,6 +3,7 @@ import { join, resolve } from "path";
 import semver from "semver";
 import { NomoCliConfigs } from "../init/interface";
 import { exec } from "child_process";
+import * as fs from "fs";
 
 let _isUnitTest: boolean = false;
 
@@ -13,9 +14,10 @@ export function joinDirWithFileName(dir: string, fileName: string): string {
 
 function isDirectory(path: string): boolean {
   try {
-    const stat = lstatSync(path);
-    return stat.isDirectory();
+    const stat = fs.lstatSync(path).isDirectory();
+    return stat;
   } catch (e) {
+    console.log(e);
     return false;
   }
 }

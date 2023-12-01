@@ -1,21 +1,18 @@
-import { logFatal, checkDir } from "../util/util";
+import { checkDir } from "../util/util";
 import { existsSync, mkdirSync, unlinkSync, renameSync } from "fs";
 import * as path from "path";
 import tar from "tar";
-import * as fs from "fs";
 
 export function renameAssetDir(assetDir: string): void {
   try {
     renameSync(assetDir, path.join(path.dirname(assetDir), "out"));
   } catch (error) {
-    console.error(`Error renaming directory: ${error}`);
     throw error;
   }
 }
 
 export function createOutDir(outDirPath: string): void {
   if (!existsSync(outDirPath)) {
-    console.log("Creating 'out' directory...");
     mkdirSync(outDirPath);
   }
 }
@@ -32,13 +29,11 @@ export function checkRequiredFiles(outDirPath: string): string[] {
 
 export function deleteExistingTarFile(tarFilePath: string): void {
   if (existsSync(tarFilePath)) {
-    console.log(`Deleting existing nomo.tar.gz...`);
     unlinkSync(tarFilePath);
   }
 }
 
-export async function buildWebOn(args: { assetDir: string }): Promise<void> {
-  const assetDir = args.assetDir;
+export async function buildWebOn(assetDir: string): Promise<void> {
   const isOutDir = assetDir.endsWith("/out");
   const outDirPath = isOutDir ? assetDir : path.resolve(assetDir, "..", "out");
 
@@ -79,7 +74,7 @@ async function createTarFile(
   outDirPath: string,
   tarFilePath: string
 ): Promise<void> {
-  console.log(`Creating new ${path.basename(tarFilePath)}: ${tarFilePath}`);
+  // console.log( `Creating new webon ${path.basename(tarFilePath)}: ${tarFilePath}`);
 
   await tar.create(
     {

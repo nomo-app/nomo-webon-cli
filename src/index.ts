@@ -15,7 +15,7 @@ function commanderBuildWebOn() {
     .description("Build a WebOn archive")
     .action((assetDir) => {
       runAsyncCommand(async () => {
-        await buildWebOn({ assetDir });
+        await buildWebOn(assetDir);
       });
     });
 }

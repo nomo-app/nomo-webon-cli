@@ -1,12 +1,16 @@
+import * as fs from "fs";
 import {
   runUnitTestExpectFailure,
   runE2ETest,
 } from "../../test-util/test-util";
-import { enableUnitTest } from "../../../src/util/util";
-import * as fs from "fs";
-import { buildWebOn } from "../../../src/build-webon/build-webon"; // Replace with the actual path to your module
-import tar from "tar";
-import * as path from "path";
+
+test("successful tar.gz build", async () => {
+  const output = await runE2ETest("build test_assets/out/");
+  expect(output).toContain("Build and packaging completed!");
+  const existsFile = fs.existsSync("test_assets/out/nomo.tar.gz");
+  expect(existsFile).toBe(true);
+  fs.unlinkSync("test_assets/out/nomo.tar.gz");
+});
 
 test("missing required file", async () => {
   const output = await runUnitTestExpectFailure(
