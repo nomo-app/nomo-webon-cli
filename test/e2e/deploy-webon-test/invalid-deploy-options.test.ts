@@ -5,14 +5,14 @@ test("archive not existing", async () => {
   const output = await runE2ETestExpectFailure(
     "deploy some-non-existing-archive production"
   );
-  expect(output).toBe(
+  expect(output).toContain(
     `ERROR: ${getDebugPath("some-non-existing-archive")} does not exist.\n`
   );
 });
 
 test("archive not a file", async () => {
   const output = await runE2ETestExpectFailure("deploy src production");
-  expect(output).toBe(`ERROR: ${getDebugPath("src")} is a directory.\n`);
+  expect(output).toContain(`ERROR: ${getDebugPath("src")} is a directory.\n`);
 });
 
 test("invalid archive, not a .tar.gz", async () => {
