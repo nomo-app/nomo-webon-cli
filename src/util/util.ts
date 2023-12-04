@@ -68,7 +68,7 @@ export function logFatal(msg: string): never {
   if (isUnitTest()) {
     throw new Error(`ERROR: ${msg}`);
   } else {
-    console.error(`ERROR: ${msg}`);
+    console.error("\x1b[31m", `ERROR: ${msg}`);
     process.exit(1);
   }
 
