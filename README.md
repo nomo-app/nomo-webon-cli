@@ -1,8 +1,3 @@
-# Under Construction!
-
-The Nomo WebOn CLI is not yet usable.
-Please refer to the advanced docs in https://github.com/nomo-app/nomo-webon-kit/blob/main/advanced-docs/ for rolling your own deploy script.
-
 # Nomo WebOn CLI
 
 `nomo-webon-cli` is a command line tool for building and deploying WebOns.
