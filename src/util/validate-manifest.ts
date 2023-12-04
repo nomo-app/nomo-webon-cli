@@ -60,7 +60,7 @@ export async function validateManifest({
     currentWebOnId.trim() !== serverWebOnId.trim()
   ) {
     throw new WebOnError(
-      `Overwriting a different webOn is not allowed. Your webon_id: ${currentWebOnId}. The id on server: ${serverWebOnId} `
+      `Overwriting a different WebOn is not allowed. Your webon_id: ${currentWebOnId}. The id on server: ${serverWebOnId} `
     );
   }
 
@@ -77,7 +77,7 @@ export async function validateManifest({
     );
   } else if (currentVersion.trim() === serverWebOnVersion.trim()) {
     throw new WebOnError(
-      `Your WebOn version is equal to the version your already uploaded: ${serverWebOnVersion} please increase your webOn_version in nomo_manifest.json.`
+      `You cannot publish over the previously published versions: ${serverWebOnVersion}. Please increase your webOn_version in nomo_manifest.json.`
     );
   }
 }
