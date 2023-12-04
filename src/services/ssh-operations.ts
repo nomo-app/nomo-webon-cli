@@ -123,5 +123,5 @@ export function executeCommand(
   command: string,
   sshCommands: SSHOperations
 ): string {
-  return sshCommands.executeCommand({ command: command });
+  return sshCommands.executeCommand({ command });
 }

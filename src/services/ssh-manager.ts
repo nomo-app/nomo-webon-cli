@@ -35,22 +35,22 @@ export async function connectAndDeploy(args: {
     await validateDeploymentConfig(deployTarget, targetConfig.rawSSH);
 
   const commands = [
-    sshOperations.checkCreateDir({ sshBaseDir: sshBaseDir }),
-    sshOperations.checkSshBaseDirExists({ sshBaseDir: sshBaseDir }),
+    sshOperations.checkCreateDir({ sshBaseDir }),
+    sshOperations.checkSshBaseDirExists({ sshBaseDir }),
     sshOperations.deployManifest({
       filePath: manifestPath,
       sshHost: targetConfig.rawSSH.sshHost,
-      sshBaseDir: sshBaseDir,
+      sshBaseDir,
     }),
     sshOperations.deployFile({
       filePath: iconPath,
       sshHost: targetConfig.rawSSH.sshHost,
-      sshBaseDir: sshBaseDir,
+      sshBaseDir,
     }),
     sshOperations.deployFile({
       filePath: archive,
       sshHost: targetConfig.rawSSH.sshHost,
-      sshBaseDir: sshBaseDir,
+      sshBaseDir,
     }),
   ];
 
@@ -92,7 +92,7 @@ async function validateDeploymentConfig(deployTarget: string, rawSSH: any) {
 
   const sshOperations = new SSHOperations({
     sshHost: rawSSH.sshHost,
-    sshPort: sshPort,
+    sshPort,
   });
 
   const serverWebOnId = await runCommand({
@@ -105,8 +105,8 @@ async function validateDeploymentConfig(deployTarget: string, rawSSH: any) {
 
   manifestChecks({
     manifestFilePath: manifestPath,
-    serverWebOnVersion: serverWebOnVersion,
-    serverWebOnId: serverWebOnId,
+    serverWebOnVersion,
+    serverWebOnId,
   });
 
   return { sshOperations, sshBaseDir, publicBaseUrl };

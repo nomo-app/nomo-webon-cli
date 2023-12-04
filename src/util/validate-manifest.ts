@@ -131,7 +131,7 @@ export async function manifestChecks({
   const nomoManifest: NomoManifest = JSON.parse(nomoManifestContent);
   validateManifest({
     manifest: nomoManifest,
-    serverWebOnVersion: serverWebOnVersion,
-    serverWebOnId: serverWebOnId,
+    serverWebOnVersion,
+    serverWebOnId,
   });
 }
