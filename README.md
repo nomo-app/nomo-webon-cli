@@ -23,8 +23,8 @@ Assuming that your web-assets are in a folder `out`, you can build and deploy a 
 ```
 nomo-webon-cli build out
 
-nomo-webon-cli deploy staging nomo.tar.gz
-nomo-webon-cli deploy production nomo.tar.gz
+nomo-webon-cli deploy nomo.tar.gz staging
+nomo-webon-cli deploy nomo.tar.gz production
 ```
 
 The `out` folder needs to contain files like `nomo_manifest.json` and `nomo_icon.svg`.
@@ -109,6 +109,6 @@ Options:
 Commands:
   login                            Log into a ZENCON account
   build <assetDir>                 Build a WebOn archive
-  deploy <deployTarget> <archive>  Deploy a WebOn archive
+  deploy <archive> <deployTarget>  Deploy a WebOn archive
   init <assetDir>                  Create a nomo_manifest.json
 ```
