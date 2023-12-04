@@ -1,5 +1,4 @@
-import commander, { Command } from "commander";
-import "dotenv/config";
+import commander from "commander";
 import { extractVersion } from "./util/extract-version";
 import { buildWebOn } from "./build-webon/build-webon";
 import { deployWebOn } from "./deploy-webon/deploy-webon";
