@@ -1,7 +1,4 @@
-import {
-  runUnitTestExpectFailure,
-  runE2ETest,
-} from "../../test-util/test-util";
+import { runUnitTestExpectFailure } from "../../test-util/test-util";
 
 test("missing required file", async () => {
   const output = await runUnitTestExpectFailure(

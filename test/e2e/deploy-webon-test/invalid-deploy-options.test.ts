@@ -14,3 +14,12 @@ test("archive not a file", async () => {
   const output = await runE2ETestExpectFailure("deploy src production");
   expect(output).toBe(`ERROR: ${getDebugPath("src")} is a directory.\n`);
 });
+
+test("invalid archive, not a .tar.gz", async () => {
+  const output = await runE2ETestExpectFailure(
+    "deploy src/util/util.ts production"
+  );
+  expect(output).toContain(
+    `ERROR: Invalid archive: src/util/util.ts. It should end with ".tar.gz"\n`
+  );
+});
