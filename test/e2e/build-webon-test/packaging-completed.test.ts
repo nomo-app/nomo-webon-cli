@@ -6,7 +6,7 @@ import {
 
 test("nextjs_sample tar.gz build", async () => {
   const output = await runE2ETest("build test_assets/nextjs_sample/out/");
-  expect(output).toContain("Build and packaging completed!");
+  expect(output).toContain("WebOn build completed: ");
   const existsFile = fs.existsSync("test_assets/nextjs_sample/out/nomo.tar.gz");
   expect(existsFile).toBe(true);
   await new Promise((resolve) => setTimeout(resolve, 5000));
@@ -15,7 +15,7 @@ test("nextjs_sample tar.gz build", async () => {
 
 test("cra_sample tar.gz build", async () => {
   const output = await runE2ETest("build test_assets/cra_sample/out/");
-  expect(output).toContain("Build and packaging completed!");
+  expect(output).toContain("WebOn build completed: ");
   const existsFile = fs.existsSync("test_assets/cra_sample/out/nomo.tar.gz");
   expect(existsFile).toBe(true);
   fs.unlinkSync("test_assets/cra_sample/out/nomo.tar.gz");

@@ -1,4 +1,4 @@
-import { checkDir, logFatal } from "../util/util";
+import { checkDir, getDebugPath, logFatal } from "../util/util";
 import { existsSync, mkdirSync, unlinkSync, renameSync } from "fs";
 import * as path from "path";
 import tar from "tar";
@@ -66,7 +66,11 @@ export async function buildWebOn(assetDir: string): Promise<void> {
 
   try {
     await createTarFile(outDirPath, tarFilePath);
-    console.log("\x1b[32m", "Build and packaging completed!", "\x1b[0m");
+    console.log(
+      "\x1b[32m",
+      "WebOn build completed: " + getDebugPath(tarFilePath),
+      "\x1b[0m"
+    );
   } catch (error) {
     console.error(`Error during build: ${error}`);
   }
@@ -76,9 +80,7 @@ async function createTarFile(
   outDirPath: string,
   tarFilePath: string
 ): Promise<void> {
-  console.log(
-    `Creating new webon ${path.basename(tarFilePath)}: ${tarFilePath}`
-  );
+  console.log(`Creating WebOn: ${tarFilePath}`);
   try {
     await tar.create(
       {
