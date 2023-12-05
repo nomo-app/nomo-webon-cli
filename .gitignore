@@ -23,7 +23,7 @@ typings/
 .idea/
 
 # Cli configs
-nomo_cli.config.js
+nomo_cli.config.cjs
 
 # Cached WebOn Files
 cache/

@@ -36,25 +36,6 @@ export interface NomoManifest {
   show_navbar?: boolean;
 }
 
-export interface NomoCliConfig {
-  deployTargets: {
-    production: {
-      rawSSH: {
-        sshHost: string;
-        sshBaseDir: string;
-        publicBaseUrl: string;
-      };
-    };
-    staging: {
-      rawSSH: {
-        sshHost: string;
-        sshBaseDir: string;
-        publicBaseUrl: string;
-        sshPort: number;
-      };
-    };
-  };
-}
 export interface GeneratedFile {
   filePath: string;
   content: string;

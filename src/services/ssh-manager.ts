@@ -1,6 +1,5 @@
 import {
   logFatal,
-  readCliConfig,
   runCommandsSequentially,
   runCommand,
 } from "../util/util";
@@ -14,43 +13,38 @@ import { NomoConfigValidator } from "../util/validate-nomo-config";
 import { manifestChecks } from "../util/validate-manifest";
 
 import { SSHOperations } from "./ssh-operations";
+import { RawSSHConfig } from "../init/interface";
 
 const manifestPath = getCachedNomoManifestPath();
 const iconPath = getCachedNomoIconPath();
 
 export async function connectAndDeploy(args: {
+  rawSSH: RawSSHConfig;
   deployTarget: string;
   archive: string;
 }) {
-  const { deployTarget, archive } = args;
-
   await extractAndCache({
-    tarFilePath: archive,
+    tarFilePath: args.archive,
   });
 
-  const nomoCliConfig = readCliConfig();
-  const targetConfig = nomoCliConfig.deployTargets[deployTarget];
 
   const { sshOperations, sshBaseDir, publicBaseUrl } =
-    await validateDeploymentConfig(deployTarget, targetConfig.rawSSH);
+    await validateDeploymentConfig(args.deployTarget, args.rawSSH);
 
   const commands = [
     sshOperations.checkCreateDir({ sshBaseDir }),
     sshOperations.checkSshBaseDirExists({ sshBaseDir }),
     sshOperations.deployManifest({
       filePath: manifestPath,
-      sshHost: targetConfig.rawSSH.sshHost,
-      sshBaseDir,
+      sshConfig: args.rawSSH,
     }),
     sshOperations.deployFile({
       filePath: iconPath,
-      sshHost: targetConfig.rawSSH.sshHost,
-      sshBaseDir,
+      sshConfig: args.rawSSH,
     }),
     sshOperations.deployFile({
-      filePath: archive,
-      sshHost: targetConfig.rawSSH.sshHost,
-      sshBaseDir,
+      filePath: args.archive,
+      sshConfig: args.rawSSH,
     }),
   ];
 

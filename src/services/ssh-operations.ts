@@ -1,4 +1,5 @@
 import * as path from "path";
+import { RawSSHConfig } from "../init/interface";
 
 export class SSHOperations {
   private sshConnect: string = "";
@@ -32,56 +33,46 @@ export class SSHOperations {
 
   private scpCommand({
     filePath,
-    sshHost,
-    sshBaseDir,
-    port,
+    sshConfig,
   }: {
     filePath: string;
-    sshHost: string;
-    sshBaseDir: string;
-    port?: number;
+    sshConfig: RawSSHConfig;
   }): string {
     const absolutePath = path.resolve(filePath);
-    return `scp ${
-      port ? `-P ${port}` : ""
-    } ${absolutePath} ${sshHost}:${sshBaseDir} && echo "File deployed: ${filePath}"`;
+    return `scp -P ${sshConfig.sshPort ?? 22} ${absolutePath} ${
+      sshConfig.sshHost
+    }:${sshConfig.sshBaseDir} && echo "File deployed: ${filePath}"`;
   }
 
   public deployFile({
     filePath,
-    sshHost,
-    sshBaseDir,
+    sshConfig,
   }: {
     filePath: string;
-    sshHost: string;
-    sshBaseDir: string;
+    sshConfig: RawSSHConfig;
   }) {
     return `${this.scpCommand({
       filePath: filePath,
-      sshHost: sshHost,
-      sshBaseDir: sshBaseDir,
+      sshConfig,
     })}`;
   }
 
   public deployManifest({
     filePath,
-    sshHost,
-    sshBaseDir,
+    sshConfig,
   }: {
     filePath: string;
-    sshHost: string;
-    sshBaseDir: string;
+    sshConfig: RawSSHConfig;
   }) {
     const manifestDeployCommand = this.scpCommand({
       filePath: filePath,
-      sshHost: sshHost,
-      sshBaseDir: sshBaseDir,
+      sshConfig,
     });
     // Rename the file to "manifest" on the remote server
     const renameManifestCommand = `${this.sshConnect} "mv ${path.join(
-      sshBaseDir,
+      sshConfig.sshBaseDir,
       path.basename(filePath)
-    )} ${path.join(sshBaseDir, "manifest")}"`;
+    )} ${path.join(sshConfig.sshBaseDir, "manifest")}"`;
 
     return `${manifestDeployCommand} && ${renameManifestCommand}`;
   }

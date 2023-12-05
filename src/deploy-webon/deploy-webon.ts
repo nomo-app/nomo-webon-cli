@@ -5,6 +5,7 @@ import {
   readCliConfig,
 } from "../util/util";
 import { connectAndDeploy } from "../services/ssh-manager";
+import { DeployTargetConfig, RawSSHConfig } from "../init/interface";
 
 export async function deployWebOn(args: {
   deployTarget: string;
@@ -15,39 +16,34 @@ export async function deployWebOn(args: {
 
   checkIfTarGz(archive);
 
-  const nomoCliConfig = readCliConfig();
+  const nomoCliConfigs = readCliConfig();
+  if (!nomoCliConfigs.deployTargets) {
+    logFatal(`Missing deployTargets object`);
+  }
 
-  const targetConfig = nomoCliConfig.deployTargets[deployTarget];
+  const targetConfig: DeployTargetConfig = nomoCliConfigs.deployTargets[deployTarget];
   if (!targetConfig) {
     logFatal(`Invalid deployTarget: ${deployTarget}`);
   }
-
-  const { rawSSH } = targetConfig;
+  const rawSSH: RawSSHConfig = targetConfig.rawSSH;
+  if (!rawSSH) {
+    logFatal(`Missing rawSSH config in deployTarget: ${deployTarget}`);
+  }
 
   try {
     await logs();
-    await connectAndDeploy({ deployTarget, archive });
+    await connectAndDeploy({ rawSSH, deployTarget, archive });
   } catch (e) {
     logFatal("Failed to connect to SSH" + e);
   }
 
   async function logs() {
-    if ("sshPort" in rawSSH) {
-      const { sshHost, sshBaseDir, publicBaseUrl, sshPort } = rawSSH;
-      console.log("\x1b[36m", ` `);
-      console.log(`SSH Host: ${sshHost}`);
-      console.log(`SSH Base Directory: ${sshBaseDir}`);
-      console.log(`Public Base URL: ${publicBaseUrl}`);
-      console.log(`SSH Port: ${sshPort}`);
-      console.log(`Archive Path: ${archive}`, "\x1b[0m");
-    } else {
-      const { sshHost, sshBaseDir, publicBaseUrl } = rawSSH;
-      console.log("\x1b[36m", ` `);
-      console.log(`SSH Host: ${sshHost}`);
-      console.log(`SSH Base Directory: ${sshBaseDir}`);
-      console.log(`Public Base URL: ${publicBaseUrl}`);
-      console.log("SSH Port is not specified");
-      console.log(`Archive Path: ${archive}`, "\x1b[0m");
-    }
+    const { sshHost, sshBaseDir, publicBaseUrl, sshPort } = rawSSH;
+    console.log("\x1b[36m", ` `);
+    console.log(`SSH Host: ${sshHost}`);
+    console.log(`SSH Base Directory: ${sshBaseDir}`);
+    console.log(`Public Base URL: ${publicBaseUrl}`);
+    console.log(`SSH Port: ${sshPort ?? 22}`);
+    console.log(`Archive Path: ${archive}`, "\x1b[0m");
   }
 }

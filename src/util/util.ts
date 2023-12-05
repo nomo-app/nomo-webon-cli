@@ -22,7 +22,7 @@ function isDirectory(path: string): boolean {
   }
 }
 export function readCliConfig(): NomoCliConfigs {
-  const cliPath = resolve("./nomo_cli.config.js");
+  const cliPath = resolve("nomo_cli.config.cjs");
   try {
     // @ts-ignore
     const nomoCliConfig = require(cliPath);

@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
-import { NomoManifest, NomoCliConfig, GeneratedFile } from "./interface";
+import { NomoManifest, GeneratedFile, NomoCliConfigs } from "./interface";
 import { isValidWebOnId } from "../util/validate-manifest";
 import { checkDir } from "../util/util";
 
@@ -63,7 +63,7 @@ function generateNomoCliConfigContent({
   webonId,
 }: {
   webonId: string;
-}): NomoCliConfig {
+}): NomoCliConfigs {
   return {
     deployTargets: {
       production: {
@@ -108,7 +108,7 @@ function writeFile(file: GeneratedFile): Promise<void> {
 export async function init(args: { assetDir: string }): Promise<void> {
   const assetDir = args.assetDir;
   const manifestFilePath = path.join(assetDir, "nomo_manifest.json");
-  const cliConfigFilePath = path.join(process.cwd(), "nomo_cli.config.js");
+  const cliConfigFilePath = path.join(process.cwd(), "nomo_cli.config.cjs");
 
   checkDir(assetDir);
 
@@ -133,7 +133,7 @@ export async function init(args: { assetDir: string }): Promise<void> {
 
   // Check if nomo_cli.config.js already exists
   if (fs.existsSync(cliConfigFilePath)) {
-    console.log("nomo_cli.config.js already exists.");
+    console.log(cliConfigFilePath + " already exists.");
   } else {
     const nomoManifestContent = fs.readFileSync(manifestFilePath, "utf-8");
     const nomoManifest: NomoManifest = JSON.parse(nomoManifestContent);

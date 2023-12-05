@@ -49,7 +49,7 @@ For Windows, you can run it via npx:
 
 ## Config
 
-The `nomo-webon-cli` is configured with a file `nomo_cli.config.js`.
+The `nomo-webon-cli` is configured with a file `nomo_cli.config.cjs`.
 See the following example for configuring your deployTargets:
 
 ```JavaScript
