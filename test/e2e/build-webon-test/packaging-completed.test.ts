@@ -4,13 +4,13 @@ import {
   runE2ETest,
 } from "../../test-util/test-util";
 
-test("successful tar.gz build", async () => {
-  const output = await runE2ETest("build test_assets/out/");
+test("nextjs_sample tar.gz build", async () => {
+  const output = await runE2ETest("build test_assets/nextjs_sample/out/");
   expect(output).toContain("Build and packaging completed!");
-  const existsFile = fs.existsSync("test_assets/out/nomo.tar.gz");
+  const existsFile = fs.existsSync("test_assets/nextjs_sample/out/nomo.tar.gz");
   expect(existsFile).toBe(true);
   await new Promise((resolve) => setTimeout(resolve, 5000));
-  fs.unlinkSync("test_assets/out/nomo.tar.gz");
+  fs.unlinkSync("test_assets/nextjs_sample/out/nomo.tar.gz");
 });
 
 test("missing required file", async () => {
