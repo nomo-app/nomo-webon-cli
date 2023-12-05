@@ -29,8 +29,9 @@ export function readCliConfig(): NomoCliConfigs {
     return nomoCliConfig;
   } catch (e) {
     logFatal(
-      "Could not find nomo_cli.config.js, run nomo-webon-cli init <assetDir> to create one. " +
-        cliPath
+      "Could not find " +
+        getDebugPath(cliPath) +
+        ", run nomo-webon-cli init <assetDir> to create one. "
     );
   }
 }
