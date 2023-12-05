@@ -13,6 +13,14 @@ test("nextjs_sample tar.gz build", async () => {
   fs.unlinkSync("test_assets/nextjs_sample/out/nomo.tar.gz");
 });
 
+test("cra_sample tar.gz build", async () => {
+  const output = await runE2ETest("build test_assets/cra_sample/out/");
+  expect(output).toContain("Build and packaging completed!");
+  const existsFile = fs.existsSync("test_assets/cra_sample/out/nomo.tar.gz");
+  expect(existsFile).toBe(true);
+  fs.unlinkSync("test_assets/cra_sample/out/nomo.tar.gz");
+});
+
 test("missing required file", async () => {
   const output = await runUnitTestExpectFailure(
     "build test_assets/out_incomplete/out"

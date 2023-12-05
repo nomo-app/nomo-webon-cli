@@ -1,4 +1,4 @@
-import { checkDir } from "../util/util";
+import { checkDir, logFatal } from "../util/util";
 import { existsSync, mkdirSync, unlinkSync, renameSync } from "fs";
 import * as path from "path";
 import tar from "tar";
@@ -89,6 +89,6 @@ async function createTarFile(
       [path.basename(outDirPath)]
     );
   } catch (e) {
-    console.log("Building tar failed " + e);
+    logFatal("Building tar failed: " + e);
   }
 }
