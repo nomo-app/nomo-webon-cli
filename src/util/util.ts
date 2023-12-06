@@ -28,6 +28,7 @@ export function readCliConfig(): NomoCliConfigs {
     const nomoCliConfig = require(cliPath);
     return nomoCliConfig;
   } catch (e) {
+    console.error(e);
     logFatal(
       "Could not find " +
         getDebugPath(cliPath) +
