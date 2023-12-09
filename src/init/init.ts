@@ -105,12 +105,14 @@ function writeFile(file: GeneratedFile): Promise<void> {
   });
 }
 
-export async function init(args: { assetDir: string }): Promise<void> {
-  const assetDir = args.assetDir;
-  const manifestFilePath = path.join(assetDir, "nomo_manifest.json");
+export async function init(args: { publicDir: string }): Promise<void> {
+  // publicDir should be a directory whose content gets included as static assets into a web-build.
+  // publicDir is usually *not* the same as assetDir, instead it depends on your framework.
+  const publicDir = args.publicDir;
+  const manifestFilePath = path.join(publicDir, "nomo_manifest.json");
   const cliConfigFilePath = path.join(process.cwd(), "nomo_cli.config.cjs");
 
-  checkDir(assetDir);
+  checkDir(publicDir);
 
   if (fs.existsSync(manifestFilePath)) {
     console.log("nomo_manifest.json already exists.");
@@ -131,7 +133,7 @@ export async function init(args: { assetDir: string }): Promise<void> {
     });
   }
 
-  // Check if nomo_cli.config.js already exists
+  // Check if config already exists
   if (fs.existsSync(cliConfigFilePath)) {
     console.log(cliConfigFilePath + " already exists.");
   } else {

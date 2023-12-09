@@ -21,13 +21,13 @@ function commanderBuildWebOn() {
 
 function commanderInitWebOn() {
   commander
-    .command("init <assetDir>")
+    .command("init <publicDir>")
     .description(
-      "Init nomo-webon-cli, create configs and manifest if not existing."
+      "Create a cli-config and/or a manifest."
     )
-    .action((assetDir) => {
+    .action((publicDir) => {
       runAsyncCommand(async () => {
-        await init({ assetDir });
+        await init({ publicDir });
       });
     });
 }
