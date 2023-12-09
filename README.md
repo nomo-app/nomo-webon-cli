@@ -110,5 +110,5 @@ Commands:
   login                            Log into a ZENCON account
   build <assetDir>                 Build a WebOn archive
   deploy <archive> <deployTarget>  Deploy a WebOn archive
-  init <assetDir>                  Create a nomo_manifest.json
+  init <publicDir>                 Create a nomo_manifest.json
 ```
