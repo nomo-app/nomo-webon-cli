@@ -36,17 +36,21 @@ export async function deleteExistingTarFile(
 }
 
 export async function buildWebOn(assetDir: string): Promise<void> {
-  const isOutDir = assetDir.endsWith("/out");
+  checkDir(assetDir);
+
+  // path.basename word for both Linux and Windows
+  const isOutDir = path.basename(assetDir) === "out";
   const outDirPath = isOutDir ? assetDir : path.resolve(assetDir, "..", "out");
 
-  checkDir(assetDir);
-  //renameAssetDir(assetDir);
-
-  //  if (!isOutDir) {
-  //    console.log("Directories are already named correctly, no need to rename.");
-  //  }
-
-  // createOutDir(outDirPath);
+  if (!isOutDir) {
+    logFatal(
+      "The assetDir must be named 'out'. If needed, please add a mv-command to your build-script for renaming " +
+        getDebugPath(assetDir) +
+        " into " +
+        getDebugPath(outDirPath) +
+        "."
+    );
+  }
 
   const missingFiles = checkRequiredFiles(outDirPath);
 
