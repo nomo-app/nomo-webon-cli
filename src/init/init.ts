@@ -2,7 +2,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { NomoManifest, GeneratedFile, NomoCliConfigs } from "./interface";
 import { isValidWebOnId } from "../util/validate-manifest";
-import { checkDir } from "../util/util";
+import { checkDir, getDebugPath } from "../util/util";
 
 const inquirer = require("inquirer");
 async function getUserInput({ prompt }: { prompt: string }): Promise<string> {
@@ -60,17 +60,20 @@ async function generateNomoManifestContent({
 }
 
 function generateNomoCliConfigContent({
-  webonId,
+  webonName,
 }: {
-  webonId: string;
+  webonName: string;
 }): NomoCliConfigs {
+  const webonNameWithoutWhitespace = webonName.replace(/\s+/g, "");
+  const webonNameUrlSafe = encodeURIComponent(webonNameWithoutWhitespace);
+  const pathSuggestion = webonNameUrlSafe.toLowerCase();
   return {
     deployTargets: {
       production: {
         rawSSH: {
           sshHost: "root@<IP-address>",
-          sshBaseDir: `/var/www/production_webons/${webonId}/`,
-          publicBaseUrl: `https://w.nomo.app/${webonId}`,
+          sshBaseDir: `/var/www/production_webons/${pathSuggestion}/`,
+          publicBaseUrl: `https://w.nomo.app/${pathSuggestion}`,
         },
       },
       staging: {
@@ -78,8 +81,8 @@ function generateNomoCliConfigContent({
           sshHost:
             process.env.SSH_TARGET ||
             "Set your env SSH_TARGET like: export SSH_TARGET= <value> ",
-          sshBaseDir: `/var/www/html/webons/${webonId}/`,
-          publicBaseUrl: `https://staging.nomo.app/${webonId}`,
+          sshBaseDir: `/var/www/html/webons/${pathSuggestion}/`,
+          publicBaseUrl: `https://staging.nomo.app/${pathSuggestion}`,
           sshPort: 51110,
         },
       },
@@ -96,7 +99,7 @@ function writeFile(file: GeneratedFile): Promise<void> {
       } else {
         console.log(
           "\x1b[32m",
-          `${path.basename(file.filePath)} created successfully.`,
+          `Created ${getDebugPath(file.filePath)}`,
           "\x1b[0m"
         );
         resolve();
@@ -115,7 +118,7 @@ export async function init(args: { publicDir: string }): Promise<void> {
   checkDir(publicDir);
 
   if (fs.existsSync(manifestFilePath)) {
-    console.log("nomo_manifest.json already exists.");
+    console.log(getDebugPath(manifestFilePath) + " already exists.");
   } else {
     const webonName = await getUserInput({ prompt: "Enter webon_name: " });
     const webonId = await getValidWebOnId({
@@ -135,13 +138,13 @@ export async function init(args: { publicDir: string }): Promise<void> {
 
   // Check if config already exists
   if (fs.existsSync(cliConfigFilePath)) {
-    console.log(cliConfigFilePath + " already exists.");
+    console.log(getDebugPath(cliConfigFilePath) + " already exists.");
   } else {
     const nomoManifestContent = fs.readFileSync(manifestFilePath, "utf-8");
     const nomoManifest: NomoManifest = JSON.parse(nomoManifestContent);
 
-    const webonId = nomoManifest.webon_id;
-    const nomoCliConfig = generateNomoCliConfigContent({ webonId: webonId });
+    const webonName = nomoManifest.webon_name;
+    const nomoCliConfig = generateNomoCliConfigContent({ webonName });
 
     await writeFile({
       filePath: cliConfigFilePath,
@@ -165,7 +168,7 @@ async function getValidWebOnId({
   while (!isValidWebOnId({ webon_id: webonId })) {
     console.error(`Invalid webon_id: ${webonId}`);
     webonId = await getUserInput({
-      prompt: "Enter an unique valid webon_id like demo.web.app:",
+      prompt: "Enter a unique valid webon_id like demo.web.app:",
     });
   }
   return webonId;
