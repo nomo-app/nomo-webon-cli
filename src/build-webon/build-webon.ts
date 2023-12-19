@@ -31,6 +31,7 @@ export async function deleteExistingTarFile(
   tarFilePath: string
 ): Promise<void> {
   if (existsSync(tarFilePath)) {
+    console.log("Deleting existing tar file: " + getDebugPath(tarFilePath));
     unlinkSync(tarFilePath);
   }
 }
@@ -63,8 +64,7 @@ export async function buildWebOn(assetDir: string): Promise<void> {
     return;
   }
 
-  const tarFileName = "nomo.tar.gz";
-  const tarFilePath = path.join(outDirPath, tarFileName);
+  const tarFilePath = "./nomo.tar.gz";
 
   await deleteExistingTarFile(tarFilePath);
 
@@ -80,11 +80,14 @@ export async function buildWebOn(assetDir: string): Promise<void> {
   }
 }
 
-async function createTarFile(
+export async function createTarFile(
   outDirPath: string,
   tarFilePath: string
 ): Promise<void> {
-  console.log(`Creating WebOn: ${tarFilePath}`);
+  if (!existsSync(outDirPath)) {
+    logFatal("Output directory does not exist: " + outDirPath);
+  }
+
   try {
     await tar.create(
       {
