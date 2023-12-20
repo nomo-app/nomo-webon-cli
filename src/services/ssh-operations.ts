@@ -80,7 +80,6 @@ export class SSHOperations {
   public executeCommand({ command }: { command: string }): string {
     return command;
   }
-
   public getWebonVersionIfExists({ sshBaseDir }: { sshBaseDir: string }) {
     const checkManifestCommand = `${this.sshConnect} "[ -e ${path.join(
       sshBaseDir,
@@ -88,8 +87,8 @@ export class SSHOperations {
     )} ] && cat ${path.join(
       sshBaseDir,
       "manifest"
-    )} | jq -r .webon_version || echo 'not_found'"`;
-
+    )} | grep -oP '(?<=\\"webon_version\\":\\s\\")[^\\"]*' || node -pe \\"try { const manifest = JSON.parse(fs.readFileSync(0, 'utf8')); console.log(manifest.webon_version); } catch (error) { console.log('not_found'); }\\" || jq -r '.webon_version // \\"not_found\\"'"`;
+    // it tries 3 different ways to retrieve the contents of a .json on a server
     return this.executeCommand({ command: checkManifestCommand });
   }
 
@@ -100,10 +99,11 @@ export class SSHOperations {
     )} ] && cat ${path.join(
       sshBaseDir,
       "manifest"
-    )} | jq -r .webon_id || echo 'not_found'"`;
+    )} | grep -oP '(?<=\\"webon_id\\":\\s\\")[^\\"]*' || node -pe \\"try { const manifest = JSON.parse(fs.readFileSync(0, 'utf8')); console.log(manifest.webon_id); } catch (error) { console.log('not_found'); }\\" || jq -r '.webon_id // \\"not_found\\"'"`;
 
     return this.executeCommand({ command: checkManifestCommand });
   }
+
   public checkSshBaseDirExists({ sshBaseDir }: { sshBaseDir: string }) {
     const checkDirCommand = `${this.sshConnect} "[ -d ${sshBaseDir} ] && echo 'sshDir exists' || echo 'not_found'"`;
     return this.executeCommand({ command: checkDirCommand });
