@@ -87,7 +87,7 @@ export class SSHOperations {
     )} ] && cat ${path.join(
       sshBaseDir,
       "manifest"
-    )} | grep -oP '(?<=\\"webon_version\\":\\s\\")[^\\"]*' || node -pe \\"try { const manifest = JSON.parse(fs.readFileSync(0, 'utf8')); console.log(manifest.webon_version); } catch (error) { console.log('not_found'); }\\" || jq -r '.webon_version // \\"not_found\\"'"`;
+    )} | grep -oP '(?<=\\"webon_version\\":\\s\\")[^\\"]*' || node -pe \\"JSON.parse(fs.readFileSync(0, 'utf8')).webon_version\\" || jq -r '.webon_version // \\"not_found\\"'"`;
     // it tries 3 different ways to retrieve the contents of a .json on a server
     return this.executeCommand({ command: checkManifestCommand });
   }
@@ -99,7 +99,7 @@ export class SSHOperations {
     )} ] && cat ${path.join(
       sshBaseDir,
       "manifest"
-    )} | grep -oP '(?<=\\"webon_id\\":\\s\\")[^\\"]*' || node -pe \\"try { const manifest = JSON.parse(fs.readFileSync(0, 'utf8')); console.log(manifest.webon_id); } catch (error) { console.log('not_found'); }\\" || jq -r '.webon_id // \\"not_found\\"'"`;
+    )} | grep -oP '(?<=\\"webon_id\\":\\s\\")[^\\"]*' || node -pe \\"JSON.parse(fs.readFileSync(0, 'utf8')).webon_id\\" || jq -r '.webon_id // \\"not_found\\"'"`;
 
     return this.executeCommand({ command: checkManifestCommand });
   }
