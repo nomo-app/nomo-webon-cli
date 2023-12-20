@@ -104,7 +104,17 @@ async function validateDeploymentConfig(deployTarget: string, rawSSH: any) {
     );
     const remoteManifestParsed = JSON.parse(remoteManifest);
     serverWebOnId = remoteManifestParsed.webon_id;
+    if (!serverWebOnId) {
+      logFatal(
+        `webon_id is missing in the remote-manifest. Please check the remote-manifest on '${remoteManifestPath}'`
+      );
+    }
     serverWebOnVersion = remoteManifestParsed.webon_version;
+    if (!serverWebOnVersion) {
+      logFatal(
+        `webon_version is missing in the the remote-manifest. Please check the remote-manifest on '${remoteManifestPath}'`
+      );
+    }
   }
 
   manifestChecks({
