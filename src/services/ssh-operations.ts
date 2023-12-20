@@ -80,28 +80,14 @@ export class SSHOperations {
   public executeCommand({ command }: { command: string }): string {
     return command;
   }
-  public getWebonVersionIfExists({ sshBaseDir }: { sshBaseDir: string }) {
-    const checkManifestCommand = `${this.sshConnect} "[ -e ${path.join(
-      sshBaseDir,
-      "manifest"
-    )} ] && cat ${path.join(
-      sshBaseDir,
-      "manifest"
-    )} | grep -oP '(?<=\\"webon_version\\":\\s\\")[^\\"]*' || node -pe \\"JSON.parse(fs.readFileSync(0, 'utf8')).webon_version\\" || jq -r '.webon_version // \\"not_found\\"'"`;
-    // it tries 3 different ways to retrieve the contents of a .json on a server
-    return this.executeCommand({ command: checkManifestCommand });
-  }
 
-  public getWebonIdIfExists({ sshBaseDir }: { sshBaseDir: string }) {
-    const checkManifestCommand = `${this.sshConnect} "[ -e ${path.join(
-      sshBaseDir,
-      "manifest"
-    )} ] && cat ${path.join(
-      sshBaseDir,
-      "manifest"
-    )} | grep -oP '(?<=\\"webon_id\\":\\s\\")[^\\"]*' || node -pe \\"JSON.parse(fs.readFileSync(0, 'utf8')).webon_id\\" || jq -r '.webon_id // \\"not_found\\"'"`;
-
-    return this.executeCommand({ command: checkManifestCommand });
+  public getRemoteManifest({
+    remoteManifestPath,
+  }: {
+    remoteManifestPath: string;
+  }) {
+    const catManifestCommand = `${this.sshConnect} "[ -e ${remoteManifestPath} ] && cat ${remoteManifestPath} || echo 'not_found'"`;
+    return this.executeCommand({ command: catManifestCommand });
   }
 
   public checkSshBaseDirExists({ sshBaseDir }: { sshBaseDir: string }) {

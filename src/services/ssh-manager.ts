@@ -1,8 +1,4 @@
-import {
-  logFatal,
-  runCommandsSequentially,
-  runCommand,
-} from "../util/util";
+import { logFatal, runCommandsSequentially, runCommand } from "../util/util";
 import {
   extractAndCache,
   getCachedNomoIconPath,
@@ -14,6 +10,7 @@ import { manifestChecks } from "../util/validate-manifest";
 
 import { SSHOperations } from "./ssh-operations";
 import { RawSSHConfig } from "../init/interface";
+import path from "path";
 
 const manifestPath = getCachedNomoManifestPath();
 const iconPath = getCachedNomoIconPath();
@@ -26,7 +23,6 @@ export async function connectAndDeploy(args: {
   await extractAndCache({
     tarFilePath: args.archive,
   });
-
 
   const { sshOperations, sshBaseDir, publicBaseUrl } =
     await validateDeploymentConfig(args.deployTarget, args.rawSSH);
@@ -89,13 +85,27 @@ async function validateDeploymentConfig(deployTarget: string, rawSSH: any) {
     sshPort,
   });
 
-  const serverWebOnId = await runCommand({
-    cmd: sshOperations.getWebonIdIfExists({ sshBaseDir: sshBaseDir }),
+  const remoteManifestPath = path.join(sshBaseDir, "manifest");
+  const remoteManifest = await runCommand({
+    cmd: sshOperations.getRemoteManifest({ remoteManifestPath }),
   });
 
-  const serverWebOnVersion = await runCommand({
-    cmd: sshOperations.getWebonVersionIfExists({ sshBaseDir: sshBaseDir }),
-  });
+  let serverWebOnId: string;
+  let serverWebOnVersion: string;
+  if (remoteManifest.trim() === "not_found") {
+    console.log(
+      `No remote-manifest found on '${remoteManifestPath}'. Deploying for the first time...`
+    );
+    serverWebOnId = "not_found";
+    serverWebOnVersion = "not_found";
+  } else {
+    console.log(
+      `Found remote-manifest on '${remoteManifestPath}'. Doing safety checks...`
+    );
+    const remoteManifestParsed = JSON.parse(remoteManifest);
+    serverWebOnId = remoteManifestParsed.webon_id;
+    serverWebOnVersion = remoteManifestParsed.webon_version;
+  }
 
   manifestChecks({
     manifestFilePath: manifestPath,
