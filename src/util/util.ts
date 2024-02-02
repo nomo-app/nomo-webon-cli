@@ -152,13 +152,3 @@ export function runCommand({
     });
   });
 }
-
-export async function runCommandsSequentially({
-  commands,
-}: {
-  commands: string[];
-}): Promise<void> {
-  for (const command of commands) {
-    await runCommand({ cmd: command });
-  }
-}

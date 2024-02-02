@@ -1,4 +1,4 @@
-import { logFatal, runCommandsSequentially, runCommand } from "../util/util";
+import { logFatal, runCommand } from "../util/util";
 import {
   extractAndCache,
   getCachedNomoIconPath,
@@ -44,27 +44,21 @@ export async function connectAndDeploy(args: {
     }),
   ];
 
-  await runCommandsSequentially({ commands: commands });
-
-  const deploymentSuccessful = await Promise.all(
-    commands.map(async (command) => {
-      const result = await runCommand({ cmd: command });
-      return result !== "not_found";
-    })
-  );
-
-  if (deploymentSuccessful.every(Boolean)) {
-    const deploymentText = `Deployment successful! Your WebOn has been deployed to the following deeplink:`;
-
-    const webonUrl = `${publicBaseUrl.trim()}/nomo.tar.gz`;
-    const deeplink = webonUrl
-      .replace("http://", "http://nomo.app/webon/")
-      .replace("https://", "https://nomo.app/webon/");
-    console.log("\x1b[32m", deploymentText, "\x1b[0m");
-    console.log("\x1b[4m", "\x1b[35m", deeplink, "\x1b[0m");
-  } else {
-    console.log("Deployment failed. Check logs for details.");
+  for (const cmd of commands) {
+    const result = await runCommand({ cmd });
+    if (result === "not_found") {
+      logFatal(`SSH-Command failed: ${cmd}`);
+    }
   }
+
+  const deploymentText = `Deployment successful! Your WebOn has been deployed to the following deeplink:`;
+
+  const webonUrl = `${publicBaseUrl.trim()}/nomo.tar.gz`;
+  const deeplink = webonUrl
+    .replace("http://", "http://nomo.app/webon/")
+    .replace("https://", "https://nomo.app/webon/");
+  console.log("\x1b[32m", deploymentText, "\x1b[0m");
+  console.log("\x1b[4m", "\x1b[35m", deeplink, "\x1b[0m");
 
   clearCache();
 }
