@@ -1,6 +1,6 @@
 {
   "name": "nomo-webon-cli",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "A CLI for building and deploying Nomo WebOns",
   "repository": {
     "type": "git",
