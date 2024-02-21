@@ -124,7 +124,7 @@ async function validateDeploymentConfig(deployTarget: string, rawSSH: any) {
     }
   }
 
-  manifestChecks({
+  await manifestChecks({
     manifestFilePath: manifestPath,
     serverWebOnVersion,
     serverWebOnId,

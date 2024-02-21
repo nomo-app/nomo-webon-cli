@@ -129,7 +129,7 @@ export async function manifestChecks({
 }): Promise<void> {
   const nomoManifestContent = fs.readFileSync(manifestFilePath, "utf-8");
   const nomoManifest: NomoManifest = JSON.parse(nomoManifestContent);
-  validateManifest({
+  await validateManifest({
     manifest: nomoManifest,
     serverWebOnVersion,
     serverWebOnId,
