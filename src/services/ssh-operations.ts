@@ -84,7 +84,9 @@ export class SSHOperations {
     webAssetsPath: string;
     sshConfig: RawSSHConfig;
   }) {
-    return `rsync -avz --progress ${webAssetsPath} ${sshConfig.sshHost}:${sshConfig.sshBaseDir}`;
+    const rsyncSourcePath = webAssetsPath + "/"; // the behavior of rsync is different with and without trailing slash!
+    const rsyncTargetPath = sshConfig.sshBaseDir;
+    return `rsync -avz --progress ${rsyncSourcePath} ${sshConfig.sshHost}:${rsyncTargetPath}`;
   }
 
   public getRemoteManifest({

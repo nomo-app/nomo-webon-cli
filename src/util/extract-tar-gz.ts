@@ -77,7 +77,7 @@ export function clearCache() {
   const cacheOutPath = resolve(cacheOutDirectory);
 
   if (!existsSync(cachePath)) {
-    mkdirSync(cachePath);
+    return;
   }
 
   try {
