@@ -2,6 +2,7 @@ import commander from "commander";
 import { extractVersion } from "./util/extract-version";
 import { buildWebOn } from "./build-webon/build-webon";
 import { deployWebOn } from "./deploy-webon/deploy-webon";
+import { bumpVersion } from "./bump-version/bump-version";
 import { init } from "./init/init";
 
 process.on("unhandledRejection", (error) => {
@@ -28,6 +29,19 @@ function commanderInitWebOn() {
     .action((publicDir) => {
       runAsyncCommand(async () => {
         await init({ publicDir });
+      });
+    });
+}
+
+function commanderBumpVersion() {
+  commander
+    .command("bumpVersion <manifest>")
+    .description(
+      "Increases the version of a WebOn."
+    )
+    .action((manifest) => {
+      runAsyncCommand(async () => {
+        await bumpVersion({ manifestPath: manifest });
       });
     });
 }
@@ -62,6 +76,7 @@ export function run(process: NodeJS.Process, cliBinDir: string): void {
   commanderBuildWebOn();
   commanderDeployWebOn();
   commanderInitWebOn();
+  commanderBumpVersion();
   commander
     .version(extractVersion({ cliBinDir }), "-v, --version")
     .parse(process.argv);
