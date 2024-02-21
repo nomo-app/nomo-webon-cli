@@ -65,7 +65,7 @@ export class SSHOperations {
     sshConfig: RawSSHConfig;
   }) {
     const manifestDeployCommand = this.scpCommand({
-      filePath: filePath,
+      filePath,
       sshConfig,
     });
     // Rename the file to "manifest" on the remote server
@@ -77,8 +77,16 @@ export class SSHOperations {
     return `${manifestDeployCommand} && ${renameManifestCommand}`;
   }
 
-  public executeCommand({ command }: { command: string }): string {
-    return command;
+  public rsyncDeployment({
+    webAssetsPath,
+    sshConfig,
+  }: {
+    webAssetsPath: string;
+    sshConfig: RawSSHConfig;
+  }) {
+    const rsyncSourcePath = webAssetsPath + "/"; // the behavior of rsync is different with and without trailing slash!
+    const rsyncTargetPath = sshConfig.sshBaseDir;
+    return `rsync -avz --progress ${rsyncSourcePath} ${sshConfig.sshHost}:${rsyncTargetPath}`;
   }
 
   public getRemoteManifest({
@@ -87,18 +95,11 @@ export class SSHOperations {
     remoteManifestPath: string;
   }) {
     const catManifestCommand = `${this.sshConnect} "[ -e ${remoteManifestPath} ] && cat ${remoteManifestPath} || echo 'not_found'"`;
-    return this.executeCommand({ command: catManifestCommand });
+    return catManifestCommand;
   }
 
   public checkSshBaseDirExists({ sshBaseDir }: { sshBaseDir: string }) {
     const checkDirCommand = `${this.sshConnect} "[ -d ${sshBaseDir} ] && echo 'sshDir exists' || echo 'not_found'"`;
-    return this.executeCommand({ command: checkDirCommand });
+    return checkDirCommand;
   }
-}
-
-export function executeCommand(
-  command: string,
-  sshCommands: SSHOperations
-): string {
-  return sshCommands.executeCommand({ command });
 }

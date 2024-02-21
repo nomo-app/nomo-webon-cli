@@ -4,6 +4,7 @@ import {
   getCachedNomoIconPath,
   getCachedNomoManifestPath,
   clearCache,
+  getCachedOutDirectory,
 } from "../util/extract-tar-gz";
 import { NomoConfigValidator } from "../util/validate-nomo-config";
 import { manifestChecks } from "../util/validate-manifest";
@@ -51,9 +52,21 @@ export async function connectAndDeploy(args: {
     }
   }
 
+  if (args.rawSSH.hybrid) {
+    console.log(
+      "Finished tar.gz-deployment. Starting hybrid deployment via rsync..."
+    );
+    const webAssetsPath = getCachedOutDirectory();
+    const cmd = sshOperations.rsyncDeployment({
+      webAssetsPath,
+      sshConfig: args.rawSSH,
+    });
+    await runCommand({ cmd });
+  }
+
   const deploymentText = `Deployment successful! Your WebOn has been deployed to the following deeplink:`;
 
-  const webonUrl = `${publicBaseUrl.trim()}/nomo.tar.gz`;
+  const webonUrl = `${publicBaseUrl.trim()}`;
   const deeplink = webonUrl
     .replace("http://", "http://nomo.app/webon/")
     .replace("https://", "https://nomo.app/webon/");
@@ -111,7 +124,7 @@ async function validateDeploymentConfig(deployTarget: string, rawSSH: any) {
     }
   }
 
-  manifestChecks({
+  await manifestChecks({
     manifestFilePath: manifestPath,
     serverWebOnVersion,
     serverWebOnId,

@@ -57,6 +57,11 @@ export function getCachedIndexHtmlPath(): string {
   return path;
 }
 
+export function getCachedOutDirectory(): string {
+  const path = resolve(cacheOutDirectory);
+  return path;
+}
+
 export function getCachedNomoIconPath(): string {
   const path = join(resolve(cacheOutDirectory), "nomo_icon.svg");
   return path;
@@ -72,7 +77,7 @@ export function clearCache() {
   const cacheOutPath = resolve(cacheOutDirectory);
 
   if (!existsSync(cachePath)) {
-    mkdirSync(cachePath);
+    return;
   }
 
   try {
