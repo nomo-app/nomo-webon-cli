@@ -112,8 +112,8 @@ Run `nomo-webon-cli --help` to see a list of available commands:
 Options:
   -v, --version     output the version number
 Commands:
-  login                            Log into a ZENCON account
   build <assetDir>                 Build a WebOn archive
   deploy <archive> <deployTarget>  Deploy a WebOn archive
-  init <publicDir>                 Create a nomo_manifest.json
+  init <publicDir>                 Create a cli-config and/or a manifest.
+  bumpVersion <manifest>           Increases the version of a WebOn.
 ```

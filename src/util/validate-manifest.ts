@@ -82,7 +82,7 @@ export async function validateManifest({
   }
 }
 
-function _isValidSemanticVersion({ version }: { version: string }): boolean {
+export function _isValidSemanticVersion({ version }: { version: string }): boolean {
   const pattern = /^(\d+)\.(\d+)\.(\d+)$/;
   const regex = new RegExp(pattern);
   return regex.test(version);
