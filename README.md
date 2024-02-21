@@ -66,14 +66,19 @@ const nomoCliConfig = {
         /**
          * sshBaseDir is a remote-directory for deploying your WebOn.
          */
-        sshBaseDir: "/var/www/production_webons/${webon_id}",
+        sshBaseDir: "/var/www/production_webons/my_webon",
 
         /**
          * publicBaseUrl is a URL where sshBaseDir gets exposed to the Internet.
          * publicBaseUrl is needed to generate a deeplink for installing your WebOn.
          * For example, you could configure an nginx-server to map sshBaseDir to a publicBaseUrl.
          */
-        publicBaseUrl: "https://w.nomo.app/${webon_id}",
+        publicBaseUrl: "https://w.nomo.app/my_webon",
+
+        /**
+         * If true, the WebOn will be deployed both as a tar.gz as well as a normal website.
+         */
+        hybrid: true,
       },
     },
     staging: {
@@ -82,8 +87,8 @@ const nomoCliConfig = {
          * sshHost could be taken from an environment-variable to hide your target IP address.
          */
         sshHost: process.env.SSH_TARGET,
-        sshBaseDir: "/var/www/staging_webons/${webon_id}",
-        publicBaseUrl: "https://staging.nomo.app/${webon_id}",
+        sshBaseDir: "/var/www/staging_webons/my_webon",
+        publicBaseUrl: "https://staging.nomo.app/my_webon",
 
         /**
          * Optional. The default sshPort is 22.

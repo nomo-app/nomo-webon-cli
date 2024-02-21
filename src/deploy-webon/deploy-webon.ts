@@ -34,7 +34,7 @@ export async function deployWebOn(args: {
     await logs();
     await connectAndDeploy({ rawSSH, deployTarget, archive });
   } catch (e) {
-    logFatal("Failed to connect to SSH" + e);
+    logFatal("SSH-deployment failed: " + e);
   }
 
   async function logs() {

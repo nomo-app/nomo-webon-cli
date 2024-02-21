@@ -45,7 +45,8 @@ export interface RawSSHConfig {
   sshHost: string;
   sshBaseDir: string;
   publicBaseUrl: string;
-  sshPort?: number; // Make the sshPort optional
+  sshPort?: number;
+  hybrid?: boolean;
 }
 
 export interface DeployTargetConfig {
