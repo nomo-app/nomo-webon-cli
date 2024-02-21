@@ -16,11 +16,11 @@ export async function bumpVersion(args: {
   const nomoManifest: NomoManifest = JSON.parse(nomoManifestContent);
   const webonVersion = nomoManifest.webon_version;
   if (!webonVersion) {
-    logFatal("webon_version is missing in manifest");
+    logFatal(`webon_version is missing in ${manifestPath}`);
   }
   if (!_isValidSemanticVersion({ version: webonVersion })) {
     logFatal(
-      `webon_version ${webonVersion} does not comply with semantic versioning regexp`
+      `webon_version ${webonVersion} in ${manifestPath} does not comply with semantic versioning regexp`
     );
   }
 
@@ -30,7 +30,7 @@ export async function bumpVersion(args: {
   const patch = versionParts[2];
   if (!major || !minor || !patch) {
     logFatal(
-      `webon_version ${webonVersion} does not contain major, minor or patch`
+      `webon_version ${webonVersion} in ${manifestPath} does not contain major, minor or patch`
     );
   }
   const newPatch = parseInt(patch) + 1;
