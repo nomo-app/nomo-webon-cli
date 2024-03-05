@@ -24,17 +24,6 @@ export async function extractAndCache(args: {
       cwd: resolve(destinationDir),
     });
 
-    /* Maybe possible to fetch fileNames as stream before extracting:
-    const getEntryFilenamesSync = (tarFilePath as any) => {
-      const filenames = requiredFiles;
-      tar.t({
-        file: tarFilePath,
-        onentry: (entry) => filenames.push(entry.path),
-        sync: true,
-      });
-      return filenames
-    };*/
-
     const missingFiles = requiredFiles.filter((file) => {
       const filePath = join(resolve(destinationDir), "/out/", file);
       return !existsSync(filePath);

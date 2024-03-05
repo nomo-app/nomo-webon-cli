@@ -29,11 +29,7 @@ export function readCliConfig(): NomoCliConfigs {
     return nomoCliConfig;
   } catch (e) {
     console.error(e);
-    logFatal(
-      "Could not find " +
-        getDebugPath(cliPath) +
-        ", run nomo-webon-cli init <assetDir> to create one. "
-    );
+    logFatal("Could not load " + getDebugPath(cliPath));
   }
 }
 
