@@ -11,6 +11,7 @@ import { manifestChecks } from "../util/validate-manifest";
 
 import { SSHOperations } from "./ssh-operations";
 import { RawSSHConfig } from "../init/interface";
+import { signWebOn } from "./sign-webon";
 import path from "path";
 
 const manifestPath = getCachedNomoManifestPath();
@@ -24,6 +25,14 @@ export async function connectAndDeploy(args: {
   await extractAndCache({
     tarFilePath: args.archive,
   });
+  const mnemonic = args.rawSSH.mnemonic;
+  if (mnemonic) {
+    await signWebOn({ manifestPath, tarFilePath: args.archive, mnemonic });
+  } else {
+    console.log(
+      "No mnemonic found in config. Skipping the creation of a cache-signature..."
+    );
+  }
 
   const { sshOperations, sshBaseDir, publicBaseUrl } =
     await validateDeploymentConfig(args.deployTarget, args.rawSSH);

@@ -25,15 +25,11 @@ export interface NomoManifest {
    * See https://semver.org/ for details.
    */
   webon_version: string;
-  /**
-   * If true, then the WebOn could be displayed in both card-mode and fullscreen-mode.
-   * If false, then the WebOn will only be displayed in fullscreen-mode.
+    /**
+   * If set, the Nomo App will reject a cache if the signature cannot be verified.
+   * cache_sig should be an Ethereum-styled message signature of a tar.gz-cache.
    */
-  card_mode?: boolean;
-  /**
-   * If defined, then the WebOn can decide whether a navigation bar should be shown or not.
-   */
-  show_navbar?: boolean;
+    cache_sig?: string;
 }
 
 export interface GeneratedFile {
@@ -47,6 +43,7 @@ export interface RawSSHConfig {
   publicBaseUrl: string;
   sshPort?: number;
   hybrid?: boolean;
+  mnemonic?: string;
 }
 
 export interface DeployTargetConfig {

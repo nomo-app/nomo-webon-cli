@@ -68,8 +68,8 @@ export class SSHOperations {
       filePath,
       sshConfig,
     });
-    // Rename the file to "manifest" on the remote server
-    const renameManifestCommand = `${this.sshConnect} "mv ${path.join(
+    // Copy the "nomo_manifest.json" to "manifest" to comply with the deploy-system-V2
+    const renameManifestCommand = `${this.sshConnect} "cp ${path.join(
       sshConfig.sshBaseDir,
       path.basename(filePath)
     )} ${path.join(sshConfig.sshBaseDir, "manifest")}"`;
