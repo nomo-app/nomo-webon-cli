@@ -43,7 +43,7 @@ export interface RawSSHConfig {
   publicBaseUrl: string;
   sshPort?: number;
   hybrid?: boolean;
-  cacheSigMnemonic?: string;
+  mnemonic?: string;
 }
 
 export interface DeployTargetConfig {

@@ -25,7 +25,7 @@ export async function connectAndDeploy(args: {
   await extractAndCache({
     tarFilePath: args.archive,
   });
-  const mnemonic = args.rawSSH.cacheSigMnemonic;
+  const mnemonic = args.rawSSH.mnemonic;
   if (mnemonic) {
     await signWebOn({ manifestPath, tarFilePath: args.archive, mnemonic });
   } else {

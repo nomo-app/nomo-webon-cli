@@ -53,7 +53,7 @@ The `nomo-webon-cli` is configured with a file `nomo_cli.config.cjs`.
 See the following example for configuring your deployTargets:
 
 ```JavaScript
-const cacheSigMnemonic = process.env.CACHE_SIGN_MNEMONIC;
+const mnemonic = process.env.CACHE_SIGN_MNEMONIC;
 
 const nomoCliConfig = {
   deployTargets: {
@@ -85,7 +85,7 @@ const nomoCliConfig = {
         /**
          * If set, the cli will generate a signature of the tar.gz-cache.
         */
-        cacheSigMnemonic,
+        mnemonic,
       },
     },
     staging: {
