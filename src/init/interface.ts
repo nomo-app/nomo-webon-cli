@@ -43,6 +43,7 @@ export interface RawSSHConfig {
   publicBaseUrl: string;
   sshPort?: number;
   hybrid?: boolean;
+  targz?: boolean;
   mnemonic?: string;
 }
 

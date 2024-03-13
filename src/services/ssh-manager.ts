@@ -54,17 +54,18 @@ export async function connectAndDeploy(args: {
     }),
   ];
 
-  for (const cmd of commands) {
-    const result = await runCommand({ cmd });
-    if (result === "not_found") {
-      logFatal(`SSH-Command failed: ${cmd}`);
+  if (args.rawSSH.targz !== false) {
+    for (const cmd of commands) {
+      const result = await runCommand({ cmd });
+      if (result === "not_found") {
+        logFatal(`SSH-Command failed: ${cmd}`);
+      }
     }
+    console.log("Finished tar.gz-deployment.");
   }
 
-  if (args.rawSSH.hybrid) {
-    console.log(
-      "Finished tar.gz-deployment. Starting hybrid deployment via rsync..."
-    );
+  if (args.rawSSH.hybrid || args.rawSSH.targz === false) {
+    console.log("Starting deployment via rsync...");
     const webAssetsPath = getCachedOutDirectory();
     const cmd = sshOperations.rsyncDeployment({
       webAssetsPath,

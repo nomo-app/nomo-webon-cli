@@ -83,6 +83,11 @@ const nomoCliConfig = {
         hybrid: true,
 
         /**
+         * If false, the WebOn will only be deployed as a normal website.
+         */
+        targz: true,
+
+        /**
          * If set, the cli will generate a signature of the tar.gz-cache.
         */
         mnemonic,
