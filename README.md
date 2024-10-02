@@ -35,7 +35,6 @@ Use `nomo-webon-cli init` if you do not yet have a `nomo_manifest.json`.
 `nomo-webon-cli` offers the following options for deployment:
 
 - **Raw SSH deployments**: Deploy via SSH to an arbitrary location
-- **ZENCON deployments**: Deploy to ZENCON-managed infrastructure
 
 ## Installation
 
@@ -107,8 +106,6 @@ const nomoCliConfig = {
          */
         sshPort: 22,
       },
-      // ZENCON deployments are not yet available. Please use rawSSH for the time being.
-      //zencon: {},
     },
   },
 };
