@@ -12,7 +12,7 @@ export function joinDirWithFileName(dir: string, fileName: string): string {
   return join(resolve(dir), fileName);
 }
 
-function isDirectory(path: string): boolean {
+export function isDirectory(path: string): boolean {
   try {
     const stat = fs.lstatSync(path).isDirectory();
     return stat;
@@ -52,7 +52,7 @@ export function checkIfTarGz(archive: string) {
     logFatal(`Invalid archive: ${archive}. It should end with ".tar.gz"`);
   }
 }
-function checkExists(path: string, hint?: { errorHint: string }): void {
+export function checkExists(path: string, hint?: { errorHint: string }): void {
   if (!existsSync(path)) {
     logFatal(`${getDebugPath(path)} does not exist.`);
   }

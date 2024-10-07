@@ -11,47 +11,53 @@ import { manifestChecks } from "../util/validate-manifest";
 
 import { SSHOperations } from "./ssh-operations";
 import { RawSSHConfig } from "../init/interface";
-import { signWebOn } from "./sign-webon";
 import path from "path";
 
 const manifestPath = getCachedNomoManifestPath();
 const iconPath = getCachedNomoIconPath();
 
 export async function connectAndDeploy(args: {
-  rawSSH: RawSSHConfig;
-  deployTarget: string;
-  archive: string;
+  sshConfig: RawSSHConfig;
+  tarFilePath: string | null;
+  assetDir: string | null;
 }) {
-  await extractAndCache({
-    tarFilePath: args.archive,
-  });
-  const mnemonic = args.rawSSH.mnemonic;
-  if (mnemonic) {
-    await signWebOn({ manifestPath, tarFilePath: args.archive, mnemonic });
+  const { sshConfig } = args;
+  if (!args.tarFilePath && !args.assetDir) {
+    logFatal("Either tarFilePath or assetDir is required.");
+  }
+  if (args.tarFilePath && args.assetDir) {
+    logFatal("Either tarFilePath or assetDir is required, but not both.");
+  }
+  if (sshConfig.hybrid && !args.tarFilePath) {
+    logFatal("a tar.gz is required for hybrid deployments.");
+  }
+  if (args.tarFilePath) {
+    await extractAndCache({
+      tarFilePath: args.tarFilePath,
+    });
   }
 
   const { sshOperations, sshBaseDir, publicBaseUrl } =
-    await validateDeploymentConfig(args.deployTarget, args.rawSSH);
+    await validateDeploymentConfig(sshConfig);
 
-  const commands = [
-    sshOperations.checkCreateDir({ sshBaseDir }),
-    sshOperations.checkSshBaseDirExists({ sshBaseDir }),
-    sshOperations.deployManifest({
-      filePath: manifestPath,
-      sshConfig: args.rawSSH,
-    }),
-    sshOperations.deployFile({
-      filePath: iconPath,
-      sshConfig: args.rawSSH,
-    }),
-    sshOperations.deployFile({
-      filePath: args.archive,
-      sshConfig: args.rawSSH,
-    }),
-  ];
-
-  if (args.rawSSH.targz !== false) {
-    for (const cmd of commands) {
+  if (args.tarFilePath) {
+    const tarGzCommands = [
+      sshOperations.checkCreateDir({ sshBaseDir }),
+      sshOperations.checkSshBaseDirExists({ sshBaseDir }),
+      sshOperations.deployManifest({
+        filePath: manifestPath,
+        sshConfig,
+      }),
+      sshOperations.deployFile({
+        filePath: iconPath,
+        sshConfig,
+      }),
+      sshOperations.deployFile({
+        filePath: args.tarFilePath,
+        sshConfig,
+      }),
+    ];
+    for (const cmd of tarGzCommands) {
       const result = await runCommand({ cmd });
       if (result === "not_found") {
         logFatal(`SSH-Command failed: ${cmd}`);
@@ -60,12 +66,20 @@ export async function connectAndDeploy(args: {
     console.log("Finished tar.gz-deployment.");
   }
 
-  if (args.rawSSH.hybrid || args.rawSSH.targz === false) {
+  let webAssetsPath: string | null;
+  if (sshConfig.hybrid) {
+    webAssetsPath = getCachedOutDirectory();
+  } else if (args.assetDir) {
+    webAssetsPath = args.assetDir;
+  } else {
+    webAssetsPath = null;
+  }
+
+  if (webAssetsPath) {
     console.log("Starting deployment via rsync...");
-    const webAssetsPath = getCachedOutDirectory();
     const cmd = sshOperations.rsyncDeployment({
       webAssetsPath,
-      sshConfig: args.rawSSH,
+      sshConfig,
     });
     await runCommand({ cmd });
   }
@@ -79,26 +93,24 @@ export async function connectAndDeploy(args: {
   console.log("\x1b[32m", deploymentText, "\x1b[0m");
   console.log("\x1b[4m", "\x1b[35m", deeplink, "\x1b[0m");
 
-  clearCache();
+  if (args.tarFilePath) {
+    clearCache();
+  }
 }
 
-async function validateDeploymentConfig(deployTarget: string, rawSSH: any) {
-  if (!NomoConfigValidator.isValidTargetConfig({ rawSSH })) {
-    logFatal(`Invalid deployTarget: ${deployTarget}`);
-  }
-
-  const { sshPort, sshBaseDir, publicBaseUrl } = rawSSH;
+async function validateDeploymentConfig(sshConfig: RawSSHConfig) {
+  const { sshPort, sshBaseDir, publicBaseUrl } = sshConfig;
 
   if (!NomoConfigValidator.isValidSshPort(sshPort)) {
     logFatal(`Invalid sshPort: ${sshPort}`);
   }
 
   const sshOperations = new SSHOperations({
-    sshHost: rawSSH.sshHost,
+    sshHost: sshConfig.sshHost,
     sshPort,
   });
 
-  const remoteManifestPath = path.join(sshBaseDir, "manifest");
+  const remoteManifestPath = path.join(sshBaseDir, "nomo_manifest.json");
   const remoteManifest = await runCommand({
     cmd: sshOperations.getRemoteManifest({ remoteManifestPath }),
   });

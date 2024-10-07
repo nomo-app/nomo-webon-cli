@@ -8,10 +8,6 @@ export class NomoConfigValidator {
     );
   }
 
-  static isValidTargetConfig(config: any): boolean {
-    return config && typeof config === "object" && config.rawSSH;
-  }
-
   static isValidSshPort(port: any): boolean {
     return port === undefined || (Number.isInteger(port) && port > 0);
   }

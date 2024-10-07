@@ -12,7 +12,7 @@ process.on("unhandledRejection", (error) => {
 function commanderBuildWebOn() {
   commander
     .command("build <assetDir>")
-    .description("Build a WebOn archive")
+    .description("Build a WebOn into a tar.gz")
     .action((assetDir) => {
       runAsyncCommand(async () => {
         await buildWebOn(assetDir);
@@ -48,11 +48,11 @@ function commanderBumpVersion() {
 
 function commanderDeployWebOn() {
   commander
-    .command("deploy <archive> <deployTarget>")
-    .description("Deploy a WebOn archive")
-    .action((archive, deployTarget) => {
+    .command("deploy <assetDirOrTarGz> <deployTarget>")
+    .description("Deploy a WebOn")
+    .action((assetDirOrTarGz, deployTarget) => {
       runAsyncCommand(async () => {
-        await deployWebOn({ archive, deployTarget });
+        await deployWebOn({ assetDirOrTarGz, deployTarget });
       });
     });
 }

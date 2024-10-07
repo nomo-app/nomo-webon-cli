@@ -69,12 +69,12 @@ export class SSHOperations {
       sshConfig,
     });
     // Copy the "nomo_manifest.json" to "manifest" to comply with the deploy-system-V2
-    const renameManifestCommand = `${this.sshConnect} "cp ${path.join(
+    const copyManifestCommand = `${this.sshConnect} "cp ${path.join(
       sshConfig.sshBaseDir,
       path.basename(filePath)
     )} ${path.join(sshConfig.sshBaseDir, "manifest")}"`;
 
-    return `${manifestDeployCommand} && ${renameManifestCommand}`;
+    return `${manifestDeployCommand} && ${copyManifestCommand}`;
   }
 
   public rsyncDeployment({
