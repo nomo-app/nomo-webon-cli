@@ -72,8 +72,8 @@ function generateNomoCliConfigContent({
       production: {
         rawSSH: {
           sshHost: "root@<IP-address>",
-          sshBaseDir: `/var/www/production_webons/${pathSuggestion}/`,
-          publicBaseUrl: `https://w.nomo.app/${pathSuggestion}`,
+          sshBaseDir: `/var/www/html/`,
+          publicBaseUrl: `https://${pathSuggestion}.nomo.zone`,
           hybrid: true,
         },
       },
@@ -82,8 +82,8 @@ function generateNomoCliConfigContent({
           sshHost:
             process.env.SSH_TARGET ||
             "Set your env SSH_TARGET like: export SSH_TARGET= <value> ",
-          sshBaseDir: `/var/www/html/webons/${pathSuggestion}/`,
-          publicBaseUrl: `https://staging.nomo.app/${pathSuggestion}`,
+          sshBaseDir: `/var/www/html/${pathSuggestion}/`,
+          publicBaseUrl: `https://staging.nomo.zone/${pathSuggestion}`,
           sshPort: 51110,
         },
       },
