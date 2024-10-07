@@ -18,23 +18,22 @@ However, `nomo-webon-cli` adds a few unique features that are not available in o
 ## How to use
 
 First, you need static web-assets made with some other build-system or framework.
-Assuming that your web-assets are in a folder `out`, you can build and deploy a WebOn like so:
+Assuming that your web-assets are in a folder `out`, you can deploy a WebOn like so:
 
 ```
-nomo-webon-cli build out
-
-nomo-webon-cli deploy nomo.tar.gz staging
-nomo-webon-cli deploy nomo.tar.gz production
+nomo-webon-cli deploy out staging
+nomo-webon-cli deploy out production
 ```
 
-The `out` folder needs to contain files like `nomo_manifest.json` and `nomo_icon.svg`.
-Use `nomo-webon-cli init` if you do not yet have a `nomo_manifest.json`.
+The `out` folder needs to contain files like `nomo_manifest.json` and `index.html`.
 
-## Deployment Targets
+## Deployment Options
 
-`nomo-webon-cli` offers the following options for deployment:
+`nomo-webon-cli` offers the following options for deployments:
 
-- **Raw SSH deployments**: Deploy via SSH to an arbitrary location
+- **Regular deployments**: Deploy a WebOn as a regular website.
+- **tar.gz deployments**:  Build and deploy a tar.gz that even works offline within Nomo.
+- **Hybrid deployments**:  Deploy both as tar.gz as well as a regular website.
 
 ## Installation
 
@@ -66,24 +65,18 @@ const nomoCliConfig = {
         /**
          * sshBaseDir is a remote-directory for deploying your WebOn.
          */
-        sshBaseDir: "/var/www/production_webons/my_webon",
+        sshBaseDir: "/var/www/html/my_webon",
 
         /**
          * publicBaseUrl is a URL where sshBaseDir gets exposed to the Internet.
          * publicBaseUrl is needed to generate a deeplink for installing your WebOn.
-         * For example, you could configure an nginx-server to map sshBaseDir to a publicBaseUrl.
          */
-        publicBaseUrl: "https://w.nomo.app/my_webon",
+        publicBaseUrl: "https://mywebon.nomo.zone",
 
         /**
          * If true, the WebOn will be deployed both as a tar.gz as well as a normal website.
          */
-        hybrid: true,
-
-        /**
-         * If false, the WebOn will only be deployed as a normal website.
-         */
-        targz: true,
+        hybrid: false,
       },
     },
     staging: {
@@ -115,8 +108,9 @@ Run `nomo-webon-cli --help` to see a list of available commands:
 Options:
   -v, --version     output the version number
 Commands:
-  build <assetDir>                 Build a WebOn archive
-  deploy <archive> <deployTarget>  Deploy a WebOn archive
-  init <publicDir>                 Create a cli-config and/or a manifest.
-  bumpVersion <manifest>           Increases the version of a WebOn.
+  deploy <assetDir> <deployTarget>       Deploy a WebOn as a regular website
+  build <assetDir>                       Build a WebOn into a tar.gz
+  deploy <nomo.tar.gz> <deployTarget>    Deploy a WebOn as a tar.gz
+  init <publicDir>                       Create a cli-config and/or a manifest
+  bumpVersion <manifest>                 Increases the version of a WebOn
 ```
