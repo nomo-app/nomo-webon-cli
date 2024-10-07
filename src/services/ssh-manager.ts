@@ -1,4 +1,4 @@
-import { logFatal, runCommand } from "../util/util";
+import { checkNotDir, logFatal, runCommand } from "../util/util";
 import {
   extractAndCache,
   getCachedNomoIconPath,
@@ -12,9 +12,6 @@ import { manifestChecks } from "../util/validate-manifest";
 import { SSHOperations } from "./ssh-operations";
 import { RawSSHConfig } from "../init/interface";
 import path from "path";
-
-const manifestPath = getCachedNomoManifestPath();
-const iconPath = getCachedNomoIconPath();
 
 export async function connectAndDeploy(args: {
   sshConfig: RawSSHConfig;
@@ -31,21 +28,27 @@ export async function connectAndDeploy(args: {
   if (sshConfig.hybrid && !args.tarFilePath) {
     logFatal("a tar.gz is required for hybrid deployments.");
   }
+  let localManifestPath: string;
   if (args.tarFilePath) {
     await extractAndCache({
       tarFilePath: args.tarFilePath,
     });
+    localManifestPath = getCachedNomoManifestPath();
+  } else {
+    localManifestPath = path.join(args.assetDir!, "nomo_manifest.json");
   }
+  checkNotDir(localManifestPath);
 
   const { sshOperations, sshBaseDir, publicBaseUrl } =
-    await validateDeploymentConfig(sshConfig);
+    await validateDeploymentConfig({ sshConfig, localManifestPath });
 
   if (args.tarFilePath) {
+    const iconPath = getCachedNomoIconPath();
     const tarGzCommands = [
       sshOperations.checkCreateDir({ sshBaseDir }),
       sshOperations.checkSshBaseDirExists({ sshBaseDir }),
       sshOperations.deployManifest({
-        filePath: manifestPath,
+        filePath: localManifestPath,
         sshConfig,
       }),
       sshOperations.deployFile({
@@ -98,15 +101,18 @@ export async function connectAndDeploy(args: {
   }
 }
 
-async function validateDeploymentConfig(sshConfig: RawSSHConfig) {
-  const { sshPort, sshBaseDir, publicBaseUrl } = sshConfig;
+async function validateDeploymentConfig(args: {
+  sshConfig: RawSSHConfig;
+  localManifestPath: string;
+}) {
+  const { sshPort, sshBaseDir, publicBaseUrl } = args.sshConfig;
 
   if (!NomoConfigValidator.isValidSshPort(sshPort)) {
     logFatal(`Invalid sshPort: ${sshPort}`);
   }
 
   const sshOperations = new SSHOperations({
-    sshHost: sshConfig.sshHost,
+    sshHost: args.sshConfig.sshHost,
     sshPort,
   });
 
@@ -143,7 +149,7 @@ async function validateDeploymentConfig(sshConfig: RawSSHConfig) {
   }
 
   await manifestChecks({
-    manifestFilePath: manifestPath,
+    manifestFilePath: args.localManifestPath,
     serverWebOnVersion,
     serverWebOnId,
   });

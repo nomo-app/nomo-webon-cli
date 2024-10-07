@@ -64,8 +64,8 @@ export async function validateManifest({
     );
   }
 
-  console.log("CurrentWebOnVersion: " + currentVersion);
-  console.log("ServerWebOnVersion: " + serverWebOnVersion);
+  console.log("Local webon_version: " + currentVersion);
+  console.log("Remote webon_version: " + serverWebOnVersion);
   if (
     versionTwoGreaterThanVersionOne({
       versionTwo: serverWebOnVersion,

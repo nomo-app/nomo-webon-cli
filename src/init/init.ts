@@ -74,7 +74,6 @@ function generateNomoCliConfigContent({
           sshHost: "root@<IP-address>",
           sshBaseDir: `/var/www/html/`,
           publicBaseUrl: `https://${pathSuggestion}.nomo.zone`,
-          hybrid: true,
         },
       },
       staging: {
