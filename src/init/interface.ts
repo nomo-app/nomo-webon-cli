@@ -25,11 +25,6 @@ export interface NomoManifest {
    * See https://semver.org/ for details.
    */
   webon_version: string;
-    /**
-   * If set, the Nomo App will reject a cache if the signature cannot be verified.
-   * cache_sig should be an Ethereum-styled message signature of a tar.gz-cache.
-   */
-    cache_sig?: string;
 }
 
 export interface GeneratedFile {

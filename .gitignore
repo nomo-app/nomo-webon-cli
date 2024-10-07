@@ -27,3 +27,5 @@ nomo_cli.config.cjs
 
 # Cached WebOn Files
 cache/
+
+nomo.tar.gz

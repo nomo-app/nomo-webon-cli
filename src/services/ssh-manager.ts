@@ -28,10 +28,6 @@ export async function connectAndDeploy(args: {
   const mnemonic = args.rawSSH.mnemonic;
   if (mnemonic) {
     await signWebOn({ manifestPath, tarFilePath: args.archive, mnemonic });
-  } else {
-    console.log(
-      "No mnemonic found in config. Skipping the creation of a cache-signature..."
-    );
   }
 
   const { sshOperations, sshBaseDir, publicBaseUrl } =
