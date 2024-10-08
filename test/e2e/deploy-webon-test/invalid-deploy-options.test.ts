@@ -1,5 +1,15 @@
 import { runE2ETestExpectFailure } from "../../test-util/test-util";
 import { getDebugPath } from "../../../src/util/util";
+import path from "path";
+
+test("missing manifest", async () => {
+  const output = await runE2ETestExpectFailure("deploy src production");
+  expect(output).toContain(
+    `ERROR: ${getDebugPath(
+      path.join("src", "nomo_manifest.json")
+    )} does not exist.\n`
+  );
+});
 
 test("archive not existing", async () => {
   const output = await runE2ETestExpectFailure(
