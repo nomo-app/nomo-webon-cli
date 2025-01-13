@@ -2,6 +2,7 @@ import { checkDir, getDebugPath, logFatal } from "../util/util";
 import { existsSync, mkdirSync, unlinkSync, renameSync } from "fs";
 import * as path from "path";
 import tar from "tar";
+import { requiredFiles } from "../util/extract-tar-gz";
 
 export function renameAssetDir(assetDir: string): void {
   try {
@@ -18,13 +19,9 @@ export function createOutDir(outDirPath: string): void {
 }
 
 export function checkRequiredFiles(outDirPath: string): string[] {
-  const requiredFiles = [
-    "index.html",
-    "nomo_icon.svg",
-    "nomo_manifest.json",
-  ].map((file) => path.resolve(outDirPath, file));
+  const rFiles = requiredFiles.map((file) => path.resolve(outDirPath, file));
 
-  return requiredFiles.filter((file) => !existsSync(file));
+  return rFiles.filter((file) => !existsSync(file));
 }
 
 export async function deleteExistingTarFile(

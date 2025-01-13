@@ -3,7 +3,7 @@ import * as tar from "tar";
 import { resolve, join } from "path";
 import { existsSync, mkdirSync, readdirSync, unlinkSync, rmdirSync } from "fs";
 
-const requiredFiles = ["index.html", "nomo_icon.svg", "nomo_manifest.json"];
+export const requiredFiles = ["index.html", "nomo_icon.png", "nomo_manifest.json"];
 const cacheDirectory = "./cache";
 const cacheOutDirectory = "./cache/out";
 
@@ -52,7 +52,7 @@ export function getCachedOutDirectory(): string {
 }
 
 export function getCachedNomoIconPath(): string {
-  const path = join(resolve(cacheOutDirectory), "nomo_icon.svg");
+  const path = join(resolve(cacheOutDirectory), "nomo_icon.png");
   return path;
 }
 
